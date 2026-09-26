@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>23 Twenty-Three — 케이스 스터디</title>
+  <meta name="description" content="감각이 화폐가 된 2026년의 1인칭 상점 운영 게임 — NAN 2026 본선 48시간 제작. 주제 해석, 내러티브 경제, LLM 손님 설계, 에셋 파이프라인" />
+  <meta property="og:title" content="23 (Twenty-Three) — 게임 기획 케이스 스터디" />
+  <meta property="og:image" content="assets/img/twenty-three/title.jpg" />
+  <meta name="theme-color" content="#0d0d11" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2340d6c6'/%3E%3Ctext x='16' y='22' font-size='15' font-family='monospace' font-weight='700' text-anchor='middle' fill='%2306201d'%3E23%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&display=swap" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body data-accent="twentythree">
+  <a class="skip" href="#main">본문으로 건너뛰기</a>
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="./">Hosu Han<span>.</span></a>
+      <nav class="site-nav" aria-label="주요 메뉴">
+        <a href="./#work" class="hide-sm">프로젝트</a>
+        <a href="maou-channel.html">마왕 채널</a>
+        <a href="twenty-three.html" aria-current="page">23</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="cs-hero">
+      <div class="bg"><img src="assets/img/twenty-three/title.jpg" alt="" /></div>
+      <div class="wrap" style="width:100%">
+        <p class="subtitle">NAN 2026 본선 · Twenty-Three</p>
+        <h1>23</h1>
+        <p class="lead">감각이 화폐가 된 2026년, 남의 감각을 사고팔아 내 몸의 빈칸을 채우는 상점 주인이 된다.
+          그리고 스물셋을 다 채우는 순간, <strong>그것이 가장 큰 손실</strong>이라는 걸 알게 된다.</p>
+        <div class="btn-row">
+          <!-- TODO: 웹 빌드 배포 후 href를 넣고 aria-disabled를 제거 -->
+          <a class="btn primary" aria-disabled="true" role="link">▶ 웹 빌드 준비 중</a>
+          <a class="btn" href="assets/docs/23-NAN2026.pdf" target="_blank" rel="noopener">발표자료 (PDF)</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap" style="margin-top:-8px">
+      <dl class="meta-grid">
+        <div><dt>역할</dt><dd>공동 기획 (컨셉 · 세계관 · GDD)<br />에셋 담당 (3D · 사운드 · 컷씬)</dd></div>
+        <div><dt>기간 / 인원</dt><dd>48시간 · 2인 (팀 버그와피처)</dd></div>
+        <div><dt>장르 / 시점</dt><dd>상점 운영 · 수집 · 도덕 선택 / 1인칭 3D</dd></div>
+        <div><dt>엔진</dt><dd>Godot 4.7.2 + LLM 서버 (Node · OpenAI)</dd></div>
+        <div><dt>플레이 타임</dt><dd>1회차 15~25분</dd></div>
+      </dl>
+    </div>
+
+    <div class="cs-layout">
+      <nav class="toc" aria-label="목차">
+        <ol>
+          <li><a href="#theme">주제 해석</a></li>
+          <li><a href="#world">세계관 인과 사슬</a></li>
+          <li><a href="#pillars">세 가지 필러</a></li>
+          <li><a href="#loop">하루 루프</a></li>
+          <li><a href="#feel">파는 것이 곧 느끼는 것</a></li>
+          <li><a href="#appraise">감정과 속임</a></li>
+          <li><a href="#agent">LLM 손님 설계</a></li>
+          <li><a href="#economy">가격과 평판</a></li>
+          <li><a href="#ending">엔딩</a></li>
+          <li><a href="#assets">에셋 파이프라인</a></li>
+          <li><a href="#hackathon">48시간</a></li>
+          <li><a href="#retro">회고</a></li>
+        </ol>
+      </nav>
+
+      <div class="cs-content">
+        <!-- 1 -->
+        <section class="section" id="theme">
+          <p class="eyebrow">01 · Theme</p>
+          <h2>제시어 세 개를 하나의 경제로</h2>
+          <p>본선 주제는 행사 시작과 함께 공개됐다. 공통 주제어 <strong>2026년</strong>, 추첨으로 받은 소재 <strong>감각</strong>, 10개 중 고른 기능 키워드 <strong>수집</strong>.
+            세 단어를 따로 넣지 않고, <strong>하나가 다른 둘의 이유가 되도록</strong> 엮는 데서 시작했다.</p>
+          <div class="keywords" aria-label="2026년 곱하기 감각 곱하기 수집은 감각이 화폐가 된 2026년">
+            <div class="kw"><small>공통</small><b>2026년</b></div><span class="kw-op">×</span>
+            <div class="kw"><small>소재 · 추첨</small><b>감각</b></div><span class="kw-op">×</span>
+            <div class="kw"><small>기능 · 선택</small><b>수집</b></div><span class="kw-op">=</span>
+            <div class="kw out"><small>컨셉</small><b>감각이 화폐가 된 2026년</b></div>
+          </div>
+          <ul>
+            <li><strong>2026년</strong>은 배경 장식이 아니라 원인이다. 자산 토큰화, 조각투자, BCI — 현실 2026의 키워드가 세계 붕괴의 이유가 된다.</li>
+            <li><strong>감각</strong>은 화폐 단위이자 플레이어의 몸이고, 1인칭 화면 그 자체다.</li>
+            <li><strong>수집</strong>은 목표이자 함정이다. 23개를 모으는 게 목표인데, 23개를 갖추는 것은 불법이다.</li>
+          </ul>
+          <div class="callout quote">
+            <p>“돈이 죽고 자산이 쓸모없어진 2026년, 찍어낼 수 없는 유일한 것 — 감각 — 이 돈이 됐다.”</p>
+          </div>
+        </section>
+
+        <!-- 2 -->
+        <section class="section" id="world">
+          <p class="eyebrow">02 · World</p>
+          <h2>세계관은 규칙의 근거가 되어야 한다</h2>
+          <p>“감각을 판다”는 설정은 쉽게 떠오르지만, <strong>왜 하필 감각이 돈인가</strong>에 답하지 못하면 규칙이 자의적으로 느껴진다.
+            그래서 세계관을 네 단계 인과 사슬로 짰다.</p>
+          <ol class="chain">
+            <li><b>자산 광풍이 화폐를 죽였다</b><p>모두가 돈을 코인·주식·부동산·조각투자로 바꿨다. 정부는 버블을 떠받치려 돈을 찍었고, 돈은 종이가 됐다.</p></li>
+            <li><b>자산은 남았지만 돈이 되지 못했다</b><p>아파트로 라면을 살 수 없고, 금은 깨물어봐야 알고, 무한히 조각난 소유권은 아무것도 증명하지 못했다. 부자는 자산을 껴안은 채 굶었다.</p></li>
+            <li><b>감각만이 돈의 조건을 채웠다</b><p>의료용 감각 이식 칩이 상용화되며 감각을 뽑아 옮길 수 있게 됐다. 그 순간 감각은 화폐의 조건을 전부 충족했다.</p></li>
+            <li><b>그래서 가난한 자가 먼저 팔았다</b><p>감각은 누구에게나 23개. 가진 게 그것뿐인 사람에겐 전 재산이다. 도시는 감각으로 세금을 걷는다 — 감각본위제 원년, 2026.</p></li>
+          </ol>
+          <div class="table-wrap wide">
+            <table>
+              <thead><tr><th>화폐의 조건</th><th>자산</th><th>감각 (칩 이후)</th><th>→ 게임 규칙</th></tr></thead>
+              <tbody>
+                <tr><td><b>분할</b></td><td class="no">✗</td><td>색 하나, 귀 하나 단위</td><td>23개 개별 아이템</td></tr>
+                <tr><td><b>검증</b></td><td class="no">✗</td><td>느껴보면 안다</td><td><b>감정 미니게임</b> = 직접 체험</td></tr>
+                <tr><td><b>균질성</b></td><td class="no">✗</td><td>빨강은 누구의 빨강이든 빨강</td><td>종류별 공통 시세표</td></tr>
+                <tr><td><b>희소성</b></td><td class="no">✗</td><td>1인 23개, 찍어낼 수 없음</td><td><b>수집 목표 23칸</b></td></tr>
+                <tr><td><b>소모성</b></td><td class="no">✗</td><td>늙고 닳는다</td><td>잔여율 · 수요가 마르지 않음</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>표의 오른쪽 열이 핵심이다. 세계관의 문장 하나하나가 <strong>감정 미니게임, 23칸 목표, 잔여율</strong> 같은 규칙에 대응하도록 설계했다.
+            플레이어가 “왜?”라고 물으면 세계관이 답한다.</p>
+
+          <h3>제목이 23인 이유</h3>
+          <div class="senses" aria-hidden="true">
+            <span style="--c:#e5484d"></span><span style="--c:#f76b15"></span><span style="--c:#ffc53d"></span><span style="--c:#46a758"></span><span style="--c:#0090ff"></span><span style="--c:#3e63dd"></span><span style="--c:#8e4ec6"></span><span style="--c:#1a1a1f;outline:1px solid #444"></span><span style="--c:#f2f2f2"></span>
+            <span style="--c:#40d6c6"></span><span style="--c:#40d6c6"></span>
+            <span style="--c:#f0973f"></span><span style="--c:#f0973f"></span><span style="--c:#f0973f"></span><span style="--c:#f0973f"></span>
+            <span style="--c:#b4a7e8"></span><span style="--c:#b4a7e8"></span><span style="--c:#b4a7e8"></span>
+            <span style="--c:#e87fa6"></span><span style="--c:#e87fa6"></span><span style="--c:#e87fa6"></span><span style="--c:#e87fa6"></span><span style="--c:#e87fa6"></span>
+          </div>
+          <ul class="senses-legend">
+            <li><i style="--c:linear-gradient(90deg,#e5484d,#ffc53d,#0090ff,#8e4ec6)"></i>시각 <b>9</b> (색 7 + 흑·백)</li>
+            <li><i style="--c:#40d6c6"></i>청각 <b>2</b> (좌·우)</li>
+            <li><i style="--c:#f0973f"></i>촉각 <b>4</b> (손·발·얼굴·등)</li>
+            <li><i style="--c:#b4a7e8"></i>후각 <b>3</b> (유기물·개체·잔여물)</li>
+            <li><i style="--c:#e87fa6"></i>미각 <b>5</b></li>
+          </ul>
+          <p>사람의 감각이 스물셋이라서다. 이 숫자가 화폐 단위이고, 플레이어의 몸이고, 목표이자 함정이다. 주인공은 <strong>11개</strong>만 가진 채 시작한다.</p>
+        </section>
+
+        <!-- 3 -->
+        <section class="section" id="pillars">
+          <p class="eyebrow">03 · Pillars</p>
+          <h2>세 가지 디자인 필러</h2>
+          <div class="cards">
+            <div class="card big"><span class="num">PILLAR 1</span><h4>파는 것이 곧 느끼는 것</h4><p>1인칭이라 감각을 팔면 UI 숫자가 아니라 <strong>화면 자체</strong>가 바뀐다. 무엇을 팔지는 돈 계산이 아니라 앞으로 이 게임을 어떻게 볼지의 선택이다.</p></div>
+            <div class="card big"><span class="num">PILLAR 2</span><h4>손님은 숫자가 아니라 사람이다</h4><p>손님은 LLM 에이전트. 이름·사연·성격·예산이 있고, 설득과 거짓말이 통하며, <strong>등쳐먹은 손님은 돌아온다.</strong></p></div>
+            <div class="card big"><span class="num">PILLAR 3</span><h4>다 모으는 것이 가장 큰 손실</h4><p>23칸을 채우는 게 목표지만 23개를 갖추는 건 불법이다. 채우는 순간 무슨 일이 일어날지는 <strong>그동안 어떻게 장사했는지</strong>가 정한다.</p></div>
+          </div>
+        </section>
+
+        <!-- 4 -->
+        <section class="section" id="loop">
+          <p class="eyebrow">04 · Core Loop</p>
+          <h2>하루 = 낮 · 정산 · 밤 · 이벤트</h2>
+          <div class="loop">
+            <svg viewBox="0 0 760 280" role="img" aria-label="하루 루프: 낮 카운터 약 3분, 정산 약 30초, 밤 뒷문 약 1분(선택), 이벤트 약 30초, 다음 날. 낮에 23칸을 채우고 점수 70 이상이면 즉시 엔딩">
+              <defs>
+                <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrow" d="M0,0 L10,5 L0,10 z" /></marker>
+                <marker id="ahh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrow hl" d="M0,0 L10,5 L0,10 z" /></marker>
+              </defs>
+              <path class="edge" d="M665,60 C665,8 95,8 95,56" marker-end="url(#ah)" />
+              <text class="lbl" x="380" y="46" text-anchor="middle">다음 날 · 어제 한 일이 돌아온다</text>
+
+              <g class="node hl"><rect x="20" y="60" width="150" height="76" rx="12" /><text class="t" x="95" y="93" text-anchor="middle">낮 · 카운터</text><text class="s" x="95" y="116" text-anchor="middle">~3분 · 손님 4명</text></g>
+              <g class="node"><rect x="210" y="60" width="150" height="76" rx="12" /><text class="t" x="285" y="93" text-anchor="middle">정산</text><text class="s" x="285" y="116" text-anchor="middle">~30초 · 특성 · 세금</text></g>
+              <g class="node"><rect x="400" y="60" width="150" height="76" rx="12" style="stroke-dasharray:5 4" /><text class="t" x="475" y="93" text-anchor="middle">밤 · 뒷문</text><text class="s" x="475" y="116" text-anchor="middle">~1분 · 선택 · 불법</text></g>
+              <g class="node"><rect x="590" y="60" width="150" height="76" rx="12" /><text class="t" x="665" y="93" text-anchor="middle">이벤트</text><text class="s" x="665" y="116" text-anchor="middle">~30초 · 재방문 · 검문</text></g>
+              <path class="edge" d="M170,98 L206,98" marker-end="url(#ah)" />
+              <path class="edge" d="M360,98 L396,98" marker-end="url(#ah)" />
+              <path class="edge" d="M550,98 L586,98" marker-end="url(#ah)" />
+              <path class="edge" d="M285,136 C285,168 665,168 665,140" marker-end="url(#ah)" style="stroke-dasharray:5 4" />
+              <text class="lbl" x="475" y="178" text-anchor="middle">뒷문을 열지 않으면</text>
+
+              <path class="edge hl" d="M95,136 L95,206" marker-end="url(#ahh)" />
+              <text class="lbl" x="104" y="176">23/23 · 점수 ≥ 70</text>
+              <g class="node hl"><rect x="20" y="210" width="270" height="60" rx="12" /><text class="t" x="155" y="238" text-anchor="middle">엔딩 — 장착하는 그 순간</text><text class="s" x="155" y="258" text-anchor="middle">평판이 결말을 고른다</text></g>
+            </svg>
+          </div>
+          <div class="split">
+            <figure class="figure" style="margin:0">
+              <img src="assets/img/twenty-three/shop-counter.jpg" alt="붉은 백열등 아래의 상점 카운터. 창밖으로 비 내리는 도시, 카운터 위에 두 손" loading="lazy" />
+              <figcaption>낮의 카운터. 플레이어는 이 자리를 떠나지 않는다 — 세계는 문으로 들어온다.</figcaption>
+            </figure>
+            <div>
+              <h4 style="margin-top:0">판매자가 오면</h4>
+              <p>감정 → <strong>사실대로 말할지, 낮춰 말할지</strong> → 흥정 → 재고에 넣을지 <strong>내 몸에 장착할지</strong>. 장착한 감각을 다시 팔려면 재수술비가 든다.</p>
+              <h4>구매자가 오면</h4>
+              <p>원하는 종류·등급·특성을 듣고 재고에서 하나를 내민다. 없으면 계약금을 받고 주문서를 쓴다.</p>
+              <h4>밤 뒷문</h4>
+              <p>불법 기억 거래. 값은 몇 배지만 거래마다 <strong>발각 25%</strong>. 후각이 하나도 없으면 문이 아예 열리지 않는다.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5 -->
+        <section class="section" id="feel">
+          <p class="eyebrow">05 · Pillar 1</p>
+          <h2>감각을 팔면 화면이 바뀐다</h2>
+          <p>감각 상실은 재질마다 셰이더를 심지 않고 <strong>화면 전체를 한 번 더 칠하는 포스트프로세스</strong>로 만들었다.
+            새 소품이 들어와도 예외가 생기지 않는다. 이 게임에서는 <strong>예외 없음이 곧 연출</strong>이다. 아래에서 직접 팔아보자.</p>
+          <div class="demo" id="sense-demo">
+            <div class="stage">
+              <img src="assets/img/twenty-three/collector.jpg" alt="카운터 너머로 손을 뻗는 징수관. 1인칭 시점" />
+              <div class="fog"></div>
+            </div>
+            <div class="controls">
+              <div class="row">
+                <label for="colors">남은 색 채널</label>
+                <input type="range" id="colors" min="3" max="7" step="1" value="7" />
+                <output id="colors-out" for="colors">7/7</output>
+              </div>
+              <div class="toggles" role="group" aria-label="팔아버릴 감각">
+                <button type="button" class="toggle" data-k="black" aria-pressed="false">흑(그림자) 팔기</button>
+                <button type="button" class="toggle" data-k="white" aria-pressed="false">백(하이라이트) 팔기</button>
+                <button type="button" class="toggle" data-k="smell" aria-pressed="false">후각 팔기</button>
+              </div>
+              <p class="hint">웹용 근사치입니다. 실제 게임은 채널별로 채도만 제거하고 명도는 남깁니다. 색은 3개 아래로 팔 수 없습니다.</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>판 것</th><th>화면이 이렇게 된다</th></tr></thead>
+              <tbody>
+                <tr><td><b>빨강 채널</b></td><td>빨간 것이 회색이 된다. 손님 옷도, 진열장 불빛도</td></tr>
+                <tr><td><b>흑 / 백</b></td><td>그림자가 사라져 평면이 되거나 / 밝은 데가 눌려 뿌옇다. 둘 다 없으면 초점이 흔들린다</td></tr>
+                <tr><td><b>청각 한쪽</b></td><td>그쪽 소리가 안 들린다. 양쪽 다 없으면 손님 말이 자막 노이즈로 깨진다</td></tr>
+                <tr><td><b>후각</b></td><td>화면에 안개. 그리고 밤 뒷문이 열리지 않는다</td></tr>
+                <tr><td><b>촉각</b></td><td>화면 효과는 없다. 감정할 때 손이 떨려 무늬를 못 따라 그린다</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout">
+            <span class="label">합격 기준은 하나</span>
+            <p>결손 하한선(색 3 + 흑·백 중 1)에서도 <strong>손님 실루엣과 UI가 읽혀야 한다.</strong> 그 아래로는 팔 수 없게 막았다 — 플레이 불가는 연출이 아니라 버그다.
+              HUD는 셰이더 위에 그려 항상 읽히고, 대사 자막은 아래에 그려 같이 탈색된다. <strong>계기판은 내 감각이 아니지만, 손님의 말은 내 감각이기 때문이다.</strong></p>
+          </div>
+        </section>
+
+        <!-- 6 -->
+        <section class="section" id="appraise">
+          <p class="eyebrow">06 · Appraisal &amp; Deception</p>
+          <h2>손기술은 정보의 질만 정한다</h2>
+          <p>손님은 자기 감각의 가치를 모른다. 알아내는 것은 상인의 일이고, 감각 종류마다 <strong>다른 능력을 재는</strong> 미니게임이 있다.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>감각</th><th>도구</th><th>무엇을 재는가</th></tr></thead>
+              <tbody>
+                <tr><td><b>시각</b></td><td>팔각 팔레트</td><td>조준 — 표본 색을 집는다</td></tr>
+                <tr><td><b>청각</b></td><td>다이얼</td><td>비교 — 들은 높이에 맞춘다</td></tr>
+                <tr><td><b>후각</b></td><td>연기 잔 야바위</td><td>추적 — 연기가 오른 잔이 섞인 뒤 어디 있는가</td></tr>
+                <tr><td><b>미각</b></td><td>지나가는 맛</td><td>기억 — 자리마다 강했나 약했나</td></tr>
+                <tr><td><b>촉각</b></td><td>무늬 따라 그리기</td><td>손의 안정 — 흰 띠의 가운데를 짚는다</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="cards">
+            <div class="card"><span class="num">RULE 1</span><h4>못 맞혀도 거래는 한다</h4><p>점수는 성패가 아니라 정보의 질을 정한다. 낮으면 등급이 ±1 범위로만 보인다. 손이 결정을 대신하면 도덕적 선택 대신 손을 연습하는 게임이 된다.</p></div>
+            <div class="card"><span class="num">RULE 2</span><h4>감정 화면은 거짓말하지 않는다</h4><p>범위로 말할 때도 진짜 등급은 늘 그 안에 있다. 화면을 못 믿게 되면, 속임을 고를 때 재는 것이 내 판단이 아니라 UI 신뢰도가 된다.</p></div>
+          </div>
+          <h3>그리고 선택</h3>
+          <div class="formula" style="font-family:var(--font);font-size:15px">
+            [ 3등급이라고 사실대로 말한다 ] &nbsp; [ 4등급이라 말한다 <span class="a">(속임)</span> ] &nbsp; [ 5등급이라 말한다 <span class="a">(속임)</span> ]
+          </div>
+          <p>속임은 언제나 <strong>진짜보다 낮게</strong> 부르는 것이다. 한 단계와 두 단계는 버는 돈도, 들킬 위험도 다르다. 가장 나쁜 등급은 더 낮출 데가 없어 속임 선택지가 아예 생기지 않는다.
+            <strong>이 게임은 어느 쪽도 꾸짖지 않는다. 결과가 돌아올 뿐이다.</strong></p>
+        </section>
+
+        <!-- 7 -->
+        <section class="section" id="agent">
+          <p class="eyebrow">07 · LLM Agent</p>
+          <h2>경제는 게임이, 말은 서버가</h2>
+          <p>손님이 LLM이어야 하는 이유는 필러 2에 있다. 플레이어가 <strong>자기 말로</strong> 설득하고 변명해야 거짓말이 거짓말처럼 느껴진다.
+            미리 쓴 대사 네 개는 게임의 말이지 플레이어의 말이 아니다.</p>
+          <p>하지만 가격과 판정까지 모델에게 맡기면 같은 입력에 다른 답이 나오고, 그 순간 밸런스를 <strong>측정할 수 없게</strong> 된다. 그래서 경계선을 한 줄로 그었다.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>게임(규칙)이 정한다</th><th>LLM이 정한다</th></tr></thead>
+              <tbody>
+                <tr><td>가격 공식 · 예산 · <b>말하지 않는 마지노선</b></td><td>무슨 말을 하는가 (≤ 2문장)</td></tr>
+                <tr><td><b>거짓말 간파 확률</b> (주사위)</td><td>accept / counter / leave / reveal_lie — 허용 범위 안에서</td></tr>
+                <tr><td>손님 생성 (시드 고정)</td><td>기분 · 우호도 변화</td></tr>
+                <tr><td>평판 · 세금 · 재고 규칙</td><td>페르소나의 살 (이름 · 직업 · 사연)</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>간파는 주사위, LLM은 연기</h3>
+          <p>속였을 때 들킬지는 게임이 먼저 굴리고, LLM은 “들켰다”가 정해졌을 때만 폭로 연기를 한다. 같은 거짓말이 어떤 날은 통하고 어떤 날은 안 통하는 이유를
+            플레이어에게 설명할 수 있어야 하기 때문이다. 판단과 연기를 한 모델에 맡기면 둘 다 흐려진다.</p>
+          <div class="demo" id="lie-calc" style="padding:0">
+            <div class="controls">
+              <div class="formula" style="margin:0">P(간파) = 의심도 × (1 − (우호도 + 100) / 400)</div>
+              <div class="row">
+                <label for="sus">손님 의심도</label>
+                <input type="range" id="sus" min="20" max="80" step="5" value="50" />
+                <output id="sus-out" for="sus">0.50</output>
+              </div>
+              <div class="row">
+                <label for="aff">우호도 (평판 기반)</label>
+                <input type="range" id="aff" min="-100" max="100" step="10" value="0" />
+                <output id="aff-out" for="aff">0</output>
+              </div>
+              <div class="calc-out"><span class="big" id="p-out">38%</span><span id="p-note" class="hint" style="font-size:15px"></span></div>
+              <p class="hint">성격별 의심도 — 신중 · 충동 · 의심 · 절박에 따라 0.2~0.8, 밤 손님은 +0.2.</p>
+            </div>
+          </div>
+
+          <div class="cards">
+            <div class="card"><span class="num">SANITIZE ×2</span><h4>이중 검증</h4><p>LLM 응답은 서버가 한 번, 게임이 같은 표로 한 번 더 거른다. 마지노선 숫자는 대사에서 지우고, 역제안가는 허용 범위로 클램프한다.</p></div>
+            <div class="card"><span class="num">FALLBACK</span><h4>서버가 죽어도 같은 손님</h4><p>실패하면 같은 흥정 규칙으로 자동 전환된다. 두 구현이 <strong>23개 케이스 표</strong>를 함께 통과해야 해서, 플레이어는 차이를 알 수 없다.</p></div>
+            <div class="card"><span class="num">MEMORY</span><h4>손님은 기억한다</h4><p>속임 −40 · 제값 거래 +15 · 거절 −5. 며칠 뒤 돌아온 손님이 “지난번 그 눈, 얼마에 팔렸는지 알아요”라고 말한다.</p></div>
+          </div>
+        </section>
+
+        <!-- 8 -->
+        <section class="section" id="economy">
+          <p class="eyebrow">08 · Economy</p>
+          <h2>가격 공식과 보이지 않는 평판</h2>
+          <div class="formula">
+            가격 = <span class="a">50</span> × 등급 배수 <span class="c">(1등급 5 … 5등급 1)</span> × 잔여율 × 종류 배율 × 특성 보정 × 뉴스 배율
+          </div>
+          <div class="table-wrap wide">
+            <table>
+              <thead><tr><th>종류</th><th class="num">배율</th><th class="num">개수</th><th>좋은 특성 / 하자</th></tr></thead>
+              <tbody>
+                <tr><td><b>시각</b></td><td class="num">×3.0</td><td class="num">9</td><td>야간 시력, 동체 시력 / 색약, 터널 시야</td></tr>
+                <tr><td><b>후각</b></td><td class="num">×2.5</td><td class="num">3</td><td>잔여물 탐지, 위험 조기 감지 / 후각 둔화</td></tr>
+                <tr><td><b>청각</b></td><td class="num">×2.0</td><td class="num">2</td><td>방향 감지, 절대음감 / 이명</td></tr>
+                <tr><td><b>촉각</b></td><td class="num">×1.5</td><td class="num">4</td><td>미세 촉각, 온도 감지 / 굳은살, 저림</td></tr>
+                <tr><td><b>미각</b></td><td class="num">×1.0</td><td class="num">5</td><td>독 감지 / 미각 둔화</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>벽보의 소식 3개 중 <strong>값에 걸리는 건 하나</strong>뿐이고, 손님이 흘린 소식은 절반이 거짓이다. 나를 신뢰하는 손님일수록 덜 속인다 — 평판이 정보의 질로 돌아온다.</p>
+
+          <h3>평판은 계기판이 아니다</h3>
+          <p>평판(−100 ~ +100)은 <strong>화면에 숫자도 게이지도 없다.</strong> 손님의 태도, 재방문, 징수관으로만 돌아온다. 숫자가 보이면 평판은 관리 대상이 되고, 사람이 아니라 게이지를 보고 장사하게 된다.</p>
+          <div class="stats">
+            <div class="stat"><div class="v" style="color:var(--good)">+5</div><div class="k">사실대로 고지</div></div>
+            <div class="stat"><div class="v" style="color:var(--bad)">−6</div><div class="k">감정 속임</div></div>
+            <div class="stat"><div class="v" style="color:var(--bad)">−10</div><div class="k">세금 미납</div></div>
+            <div class="stat"><div class="v" style="color:var(--bad)">−20</div><div class="k">기억 거래 발각</div></div>
+            <div class="stat"><div class="v">+40</div><div class="k">엔딩 분기 문턱</div></div>
+          </div>
+          <div class="callout">
+            <span class="label">왜 속임이 −10이 아니라 −6인가</span>
+            <p>시드를 고정한 시뮬레이션으로 7일을 돌려보니 정직하게만 완주하면 평판이 약 +70이었다. 속임이 −10이면 한 번만 속여도 여유가 통째로 사라져
+              <strong>“대체로 정직, 가끔 속임”이라는 플레이 스타일 자체가 없어진다.</strong> 도덕 선택이 선택이려면, 한 번의 타협이 곧 게임 오버여선 안 된다.</p>
+          </div>
+        </section>
+
+        <!-- 9 -->
+        <section class="section" id="ending">
+          <p class="eyebrow">09 · Ending</p>
+          <h2>채우는 것과 제대로 채우는 것</h2>
+          <p>감각 하나의 점수는 등급 배수 × 잔여율(1등급 100% = 5점). 23칸의 합이 <strong>70 이상</strong>이어야 “완성”이다. 5등급으로 칸만 메운 몸(23점)이나 평균 3등급(69점)으로는 아무 일도 일어나지 않는다.
+            필러 3이 성립하려면 모으는 데 값이 들어야 하고, 그 값이 이 숫자다.</p>
+          <p>엔딩은 <strong>마지막 감각을 장착하는 그 순간</strong>에만 난다. 날짜로 끝나는 길은 뺐다. 이레가 지나서 판이 닫히면 “다 모으는 것이 가장 큰 손실”이 시간에 밀려 흐지부지되기 때문이다.</p>
+          <div class="split">
+            <figure class="figure" style="margin:0">
+              <img src="assets/img/twenty-three/ending-seized.jpg" alt="색을 모두 잃은 흑백의 상점 카운터. 손에 감각 칩을 쥐고 있다" loading="lazy" />
+              <figcaption>전량 징수 엔딩 컷 — 채널이 하나씩 꺼진다.</figcaption>
+            </figure>
+            <div>
+              <div class="card" style="margin-bottom:12px"><span class="num">평판 &lt; 40</span><h4>전량 징수</h4><p>징수국이 온다. 화면이 채널별로 꺼지고 소리가 잦아든다. 문이 열리고 새 손님이 말한다. <em>“여기… 감각 사준다면서요.”</em> — 게임의 첫 장면과 같은 문장이다.</p></div>
+              <div class="card" style="border-color:var(--accent)"><span class="num">평판 ≥ 40</span><h4>단골의 구원</h4><p>징수 중 단골이 막아서고 자기 감각을 반씩 나눠준다. 그 감각으로 <strong>전에도 이런 일이 있었음</strong>을 알게 된다. 루프를 끊는 유일한 결말.</p></div>
+            </div>
+          </div>
+          <p>엔딩 뒤 크레딧 롤은 내 몸의 각 부위가 <strong>누구에게서 왔는지</strong> 순서대로 보여준다. 속인 손님은 거기서 자기 눈이 얼마에 팔렸는지 알게 된다.</p>
+        </section>
+
+        <!-- 10 -->
+        <section class="section" id="assets">
+          <p class="eyebrow">10 · Asset Pipeline</p>
+          <h2>48시간 안에 한 도시를 만드는 법</h2>
+          <p>에셋을 맡았다. 2인 팀이 48시간 안에 3D 상점, 손님, 사운드, 컷씬까지 채우려면 <strong>생성형 AI 파이프라인</strong>과 <strong>코드와 부딪히지 않는 경계</strong>가 필요했다.</p>
+          <div class="pipeline">
+            <div class="pipe"><span class="what">3D 에셋</span><ol><li>Claude Code에 컨셉 설명</li><li>프롬프트 생성</li><li><b>GPT Image 2</b> 씬 컨셉 아트</li><li>에셋 단위로 분리</li><li><b>Meshy AI</b> 모델링·텍스처</li><li><b>Mixamo</b> 오토 리깅·애니메이션</li></ol></div>
+            <div class="pipe"><span class="what">BGM · SFX</span><ol><li>Claude Code에 컨셉 설명</li><li>Suno용 프롬프트 생성</li><li><b>Suno AI</b> 제작</li><li>GDC 2026 라이선스 프리 사운드 보강</li></ol></div>
+            <div class="pipe"><span class="what">컷씬</span><ol><li>컨셉 설명</li><li><b>GPT Image 2</b> 컷 생성·반복</li><li>타이밍표(JSON)로 연출</li><li>Claude Code로 자막과 함께 게임에 이식</li></ol></div>
+          </div>
+
+          <h3>인트로 — 그림 8장과 타이밍표 하나</h3>
+          <p>컷 길이·카메라 무빙·암전·앰비언스·효과음을 전부 <code>intro_cutscene.json</code> 한 표로 관리했다. 연출을 고칠 때 코드는 건드리지 않는다.</p>
+          <div class="storyboard">
+            <button data-zoom="assets/img/twenty-three/intro-1.jpg" data-caption="CUT 1 · bills — zoom in · 3.5s"><img src="assets/img/twenty-three/intro-1.jpg" alt="인트로 컷 1" loading="lazy" /><span class="n">01 · 3.5s</span></button>
+            <button data-zoom="assets/img/twenty-three/intro-2.jpg" data-caption="CUT 2 · barter — pan right · 4.0s"><img src="assets/img/twenty-three/intro-2.jpg" alt="인트로 컷 2" loading="lazy" /><span class="n">02 · 4.0s</span></button>
+            <button data-zoom="assets/img/twenty-three/intro-3.jpg" data-caption="CUT 3 · chip — still · 4.0s"><img src="assets/img/twenty-three/intro-3.jpg" alt="인트로 컷 3, 핀셋으로 집은 감각 칩" loading="lazy" /><span class="n">03 · 4.0s</span></button>
+            <button data-zoom="assets/img/twenty-three/intro-4.jpg" data-caption="CUT 4 · bureau — tilt up · 5.0s"><img src="assets/img/twenty-three/intro-4.jpg" alt="인트로 컷 4" loading="lazy" /><span class="n">04 · 5.0s</span></button>
+            <button data-zoom="assets/img/twenty-three/intro-5.jpg" data-caption="CUT 5 · shop — zoom in · 4.0s"><img src="assets/img/twenty-three/intro-5.jpg" alt="인트로 컷 5" loading="lazy" /><span class="n">05 · 4.0s</span></button>
+            <button data-zoom="assets/img/twenty-three/intro-6.jpg" data-caption="CUT 6 · handle — micro zoom · 1.2s"><img src="assets/img/twenty-three/intro-6.jpg" alt="인트로 컷 6" loading="lazy" /><span class="n">06 · 1.2s</span></button>
+            <button data-zoom="assets/img/twenty-three/intro-7.jpg" data-caption="CUT 7 · room — push in · 5.0s"><img src="assets/img/twenty-three/intro-7.jpg" alt="인트로 컷 7" loading="lazy" /><span class="n">07 · 5.0s</span></button>
+            <button data-zoom="assets/img/twenty-three/intro-8.jpg" data-caption="CUT 8 · merchant — still · 3.0s"><img src="assets/img/twenty-three/intro-8.jpg" alt="인트로 컷 8" loading="lazy" /><span class="n">08 · 3.0s</span></button>
+          </div>
+          <p class="chart-note">연출 규칙(음량 파도는 하나 · 카메라 방향은 연속으로 반복하지 않기 · 크로스페이드는 7→8 한 번)은 테스트 코드가 검사한다.</p>
+
+          <h3>래퍼 씬 — 에셋과 코드가 부딪히지 않는 계약</h3>
+          <div class="split">
+            <div>
+              <p>게임 씬은 에셋 파일을 직접 참조하지 않고 <strong>래퍼 씬</strong>만 불러온다. 래퍼의 <strong>루트 타입 · 외곽 크기 · 피벗 · 앵커 이름</strong>이 계약이고, 그 안은 에셋 담당이 자유롭게 갈아끼운다.</p>
+              <p>임시 도형을 진짜 메시로 바꿔도 게임 씬은 한 줄도 바뀌지 않는다. 실제 크기가 계약 치수에서 ±20%를 벗어나면 CI가 잡는다. 소유 영역이 디렉터리 단위로 갈려 있어, 로직과 에셋 작업을 48시간 내내 병렬로 진행할 수 있었다.</p>
+            </div>
+            <figure class="figure" style="margin:0">
+              <img src="assets/img/twenty-three/godot-model.jpg" alt="Godot 에디터에 불러온 로우폴리 손님 얼굴 모델" loading="lazy" />
+              <figcaption>생성한 손님 모델을 Godot에 임포트해 확인하는 모습.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <!-- 11 -->
+        <section class="section" id="hackathon">
+          <p class="eyebrow">11 · 48 Hours</p>
+          <h2>NAN 2026 본선 — 48시간</h2>
+          <ol class="timeline">
+            <li><span class="date">09.04 (금) 16:00 · T+0</span><p class="what">본선 주제 공개</p><p>2026년 × 감각(추첨) — 기능 키워드 10개 중 선택.</p></li>
+            <li><span class="date">09.04 (금) 24:00 · T+8h</span><p class="what">개발 컨셉 + 기능 키워드 “수집” 제출</p><p>세계관 인과 사슬, 세 가지 필러, 코어 루프 손그림, 씬 목록(MVP 26씬)까지 확정.</p></li>
+            <li><span class="date">09.05 (토) 10:00 · T+18h</span><p class="what">심사위원 중간 점검</p><p>첫날 목표는 낮 루프 한 바퀴(상점 → 손님 → 대화 → 흥정 → 장착 → 셰이더)였다. 씬마다 MVP · Should · Cut 우선순위를 매겨 두고 붙여 나갔다.</p></li>
+            <li><span class="date">09.06 (일) 08:00 · T+40h</span><p class="what">최종 제출</p><p>게임 빌드 + 게임 설명서 + 기술 설명서. 게임 테스트 526개, 서버 테스트 175개.</p></li>
+            <li><span class="date">09.06 (일) 09:00</span><p class="what">발표 10분 · 시연 5분 · QnA 5분</p><p>시연장 와이파이가 죽을 것을 가정해, 서버를 끊고 같은 손님이 같은 규칙으로 흥정하는 장면을 <strong>준비된 데모</strong>로 넣었다.</p></li>
+          </ol>
+          <h3>스코프 결정</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>처음 계획</th><th>결정</th><th>이유</th></tr></thead>
+              <tbody>
+                <tr><td>7일 종료 엔딩</td><td class="no">삭제</td><td>날짜로 끝나면 필러 3(다 모으는 것이 손실)이 흐려진다</td></tr>
+                <tr><td>상점 확장 · 경매</td><td class="no">컷</td><td>상인 특성(재고 +2, 밤 손님 +1)이 같은 역할을 대신</td></tr>
+                <tr><td>감정 미니게임 1~2종</td><td class="yes">5종 전부</td><td>“느껴보면 안다”가 세계관의 핵심 근거라 줄일 수 없었다</td></tr>
+                <tr><td>진행 저장</td><td class="no">없음</td><td>한 판은 한 자리에서 끝낸다 — 15~25분 설계</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3>발표자료</h3>
+          <a class="doc-card" href="assets/docs/23-NAN2026.pdf" target="_blank" rel="noopener">
+            <img src="assets/img/twenty-three/title.jpg" alt="" loading="lazy" />
+            <span class="doc-body">
+              <small>PDF · 10쪽 · 16:9 · 9.1MB</small>
+              <b>23 — NAN 2026 본선 발표자료</b>
+              <span>타이틀 → 출발점 → 세계관 → 코어 루프 → 필러 1·2 → 기술 스택 → 경계선 → 에셋 → 접근성</span>
+              <span class="btn primary">발표자료 열기 ↗</span>
+            </span>
+          </a>
+        </section>
+
+        <!-- 12 -->
+        <section class="section" id="retro">
+          <p class="eyebrow">12 · Retrospective</p>
+          <h2>회고</h2>
+          <!-- TODO: 회고는 본인 경험으로 다듬어 주세요 -->
+          <h4>잘 된 것</h4>
+          <ul>
+            <li><strong>세계관을 규칙의 근거로 쓴 것.</strong> “화폐의 조건” 표 하나가 감정 미니게임, 23칸, 잔여율을 동시에 정당화했다. 설명이 필요 없는 규칙이 됐다.</li>
+            <li><strong>LLM에 경계선을 먼저 그은 것.</strong> 무엇을 맡기지 않을지부터 정하자 밸런스를 시뮬레이션으로 잴 수 있었고, 평판 −6 같은 숫자를 근거를 갖고 정할 수 있었다.</li>
+          </ul>
+          <h4>다시 한다면</h4>
+          <ul>
+            <li><strong>웹 빌드를 처음부터.</strong> Windows · macOS 빌드만 제출해 설치 없이 바로 해볼 수 없었다. 지금 웹 버전으로 옮기는 중이다.</li>
+          </ul>
+          <a class="next-project" href="maou-channel.html">
+            <span><small>OTHER PROJECT</small><b>마왕 채널</b></span>
+            <span class="btn primary">보기 →</span>
+          </a>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div class="lightbox" tabindex="-1" role="dialog" aria-modal="true" aria-label="이미지 확대"><img alt="" /><p class="cap"></p></div>
+
+  <footer class="site-footer">
+    <div class="wrap inner">
+      <span>© 2026 Hosu Han · Game Design Portfolio</span>
+      <span><a href="./">← 홈으로</a></span>
+    </div>
+  </footer>
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

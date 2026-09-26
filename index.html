@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>게임 기획 포트폴리오</title>
+  <meta name="description" content="시스템과 규칙으로 감정을 설계하는 게임 기획 포트폴리오 — 마왕 채널, 23(Twenty-Three)" />
+  <meta property="og:title" content="게임 기획 포트폴리오" />
+  <meta property="og:description" content="마왕 채널 · 23(Twenty-Three) — NAN 2026 사전과제와 본선 결과물" />
+  <meta property="og:image" content="assets/img/twenty-three/title.jpg" />
+  <meta name="theme-color" content="#0d0d11" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23e8b04b'/%3E%3Ctext x='16' y='22' font-size='16' font-family='monospace' font-weight='700' text-anchor='middle' fill='%231a1408'%3EGD%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&display=swap" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <a class="skip" href="#main">본문으로 건너뛰기</a>
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="./">Hosu Han<span>.</span> <!-- TODO: 표기할 이름으로 수정 --></a>
+      <nav class="site-nav" aria-label="주요 메뉴">
+        <a href="#work">프로젝트</a>
+        <a href="#about" class="hide-sm">소개</a>
+        <a href="maou-channel.html">마왕 채널</a>
+        <a href="twenty-three.html">23</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="home-hero">
+      <div class="wrap">
+        <p class="eyebrow">Game Design Portfolio · 2026</p>
+        <h1>규칙이 <em>감정</em>을 만든다고 믿는 게임 기획자</h1>
+        <p class="lead">
+          “살려야 하지만 위험해야 본다”, “팔수록 세상이 흐려진다”처럼
+          <strong>한 문장짜리 딜레마</strong>를 먼저 세우고, 그것이 수치·공식·연출에서 흔들리지 않도록 설계합니다.
+          NAN 2026 사전과제와 본선에서 만든 두 게임을 소개합니다.
+        </p>
+        <div class="btn-row">
+          <a class="btn primary" href="#work">프로젝트 보기</a>
+          <a class="btn" href="https://github.com/tnghgks" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+            GitHub
+          </a>
+        </div>
+
+        <div class="principles">
+          <div class="principle">
+            <b>딜레마 먼저</b>
+            <p>핵심 재미를 두 힘이 맞서는 한 문장으로 고정하고, 모든 시스템이 그 긴장을 키우는지 검사합니다.</p>
+          </div>
+          <div class="principle">
+            <b>숫자로 말하는 밸런스</b>
+            <p>공식과 knob을 한 곳에 모으고, 플레이테스트 피드백을 날짜별 수치 변경으로 남깁니다.</p>
+          </div>
+          <div class="principle">
+            <b>AI는 도구, 규칙은 게임</b>
+            <p>LLM·생성형 AI를 쓰되, 경제와 판정은 재현 가능한 규칙이 쥐도록 경계선을 긋습니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="work">
+      <div class="wrap">
+        <p class="eyebrow">Selected Work</p>
+        <h2>프로젝트</h2>
+        <div class="projects">
+          <a class="project-card" href="maou-channel.html" style="--pc-accent:#e8b04b">
+            <div class="thumb"><img src="assets/img/maou/throne-room.jpg" alt="어두운 마왕성 옥좌의 방. 왼쪽엔 푸른 방송 수정구, 오른쪽엔 옥좌에 앉은 마왕" loading="lazy" /></div>
+            <div class="body">
+              <span class="kicker">NAN 2026 사전과제 · 2주 · 2인</span>
+              <h3>마왕 채널</h3>
+              <p>파산 직전의 마왕이 용사를 방송 스타로 키운다. <strong>용사가 죽으면 방송이 끝나고, 안전하면 아무도 안 본다.</strong>
+                위험도–시청자–후원으로 이어지는 경제를 설계한 라이브 스트리밍 액션 로그라이트.</p>
+              <ul class="tags"><li>시스템 기획</li><li>밸런스·경제</li><li>Web · Phaser 3</li><li>플레이 가능</li></ul>
+              <span class="more">케이스 스터디 →</span>
+            </div>
+          </a>
+
+          <a class="project-card" href="twenty-three.html" style="--pc-accent:#40d6c6">
+            <div class="thumb"><img src="assets/img/twenty-three/shop-counter.jpg" alt="비 내리는 도시가 창밖으로 보이는 붉은 조명의 좁은 상점 카운터, 1인칭 시점" loading="lazy" /></div>
+            <div class="body">
+              <span class="kicker">NAN 2026 본선 · 48시간 · 2인</span>
+              <h3>23 <small style="font-size:.5em;color:var(--muted);font-weight:700">Twenty-Three</small></h3>
+              <p>감각이 화폐가 된 2026년, 남의 감각을 사고팔아 내 몸의 빈칸을 채우는 상점 주인.
+                <strong>팔수록 화면이 흐려지고, 손님은 LLM 에이전트라 거짓말이 통하며, 다 모으는 것이 가장 큰 손실이다.</strong></p>
+              <ul class="tags"><li>주제 해석·세계관</li><li>내러티브 경제</li><li>LLM 에이전트</li><li>에셋 담당</li></ul>
+              <span class="more">케이스 스터디 →</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="wrap">
+        <p class="eyebrow">About</p>
+        <h2>소개</h2>
+        <div class="about-grid">
+          <div>
+            <!-- TODO: 자기소개 문단은 직접 다듬어 주세요 -->
+            <p class="lead">개발 경험을 바탕으로 <strong>“기획서가 코드와 어긋나지 않는”</strong> 기획을 지향합니다.</p>
+            <p>
+              기획서의 숫자가 코드의 상수와 1:1로 대응하도록 문서를 쓰고, 밸런싱 knob은 한 파일에 모아
+              피드백이 들어오면 무엇을 얼마나 바꿨는지 추적할 수 있게 합니다. 두 프로젝트 모두 AI 에이전트와
+              함께 작업했고, 어디에 AI를 쓰고 어디에 쓰지 않을지를 설계 단계에서 먼저 정했습니다.
+            </p>
+            <h4>NAN 2026</h4>
+            <ul>
+              <li><b>사전과제</b> — 마왕 채널 (2026.07 – 08, 2주)</li>
+              <li><b>본선</b> — 23 (2026.09.04 – 09.06, 48시간 · NHN 판교 플레이뮤지엄)</li>
+            </ul>
+          </div>
+          <ul class="skill-list">
+            <li><b>시스템 · 경제 설계</b><span>위험도→시청자→후원 파이프라인, 가격 공식, 평판 축 설계와 수치 튜닝</span></li>
+            <li><b>주제 해석 · 세계관</b><span>제시어 세 개(2026년 × 감각 × 수집)를 인과 사슬로 엮어 규칙의 근거가 되는 세계 구축</span></li>
+            <li><b>AI 협업 파이프라인</b><span>GDD↔코드 동기화 에이전트, LLM 손님 설계, 생성형 AI 에셋 파이프라인(3D·사운드·컷씬)</span></li>
+            <li><b>구현 가능한 기획</b><span>TypeScript · Phaser · Godot 경험으로 프로토타입까지 직접 확인</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap inner">
+      <span>© 2026 Hosu Han · Game Design Portfolio</span>
+      <span><a href="https://github.com/tnghgks" target="_blank" rel="noopener">github.com/tnghgks</a> <!-- TODO: 이메일 등 연락처 추가 --></span>
+    </div>
+  </footer>
+</body>
+</html>
