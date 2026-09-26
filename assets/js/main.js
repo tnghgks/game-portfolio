@@ -129,7 +129,7 @@
       susOut.value = s.toFixed(2);
       affOut.value = a > 0 ? `+${a}` : `${a}`;
       out.textContent = `${Math.round(p * 100)}%`;
-      note.textContent = p >= 0.5 ? '위험 — 이 손님에게 거짓말은 도박이다' : p >= 0.25 ? '들킬 수도 있다' : '거의 들키지 않는다 — 그래서 더 무겁다';
+      note.textContent = p >= 0.5 ? '발각 확률이 더 높음. 이 손님에게는 속임 비추천' : p >= 0.25 ? '발각 가능성 있음' : '거의 안 걸림. 그래서 더 찜찜한 선택';
     };
     sus.addEventListener('input', run);
     aff.addEventListener('input', run);
