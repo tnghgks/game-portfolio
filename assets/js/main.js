@@ -85,36 +85,33 @@
   if (demo) {
     const stage = $('.stage', demo);
     const img = $('img', stage);
-    const fog = $('.fog', stage);
     const colors = $('#colors', demo);
     const colorsOut = $('#colors-out', demo);
-    const state = { black: false, white: false, smell: false };
-    const vignette = document.createElement('div');
-    vignette.style.cssText = 'position:absolute;inset:0;pointer-events:none;transition:box-shadow .35s ease';
-    stage.appendChild(vignette);
+    // 실제 게임 캡처. 인덱스 = 남은 색 채널 수 (7: 전부 보유 → 0: 누적으로 모두 판매)
+    const dir = 'assets/img/twenty-three/';
+    const shots = ['orange', 'pupple', 'indigo', 'yellow', 'green', 'blue', 'red']
+      .map((c) => `${dir}unequip_${c}.png`)
+      .concat(`${dir}equip_all.png`);
+    const sold = ['빨강', '파랑', '초록', '노랑', '남색', '보라', '주황']; // 판매 순서
+    // 슬라이더를 처음 만질 때 나머지 캡처를 미리 받아 전환 시 깜빡임 방지
+    let preloaded = false;
+    const preload = () => {
+      if (preloaded) return;
+      preloaded = true;
+      shots.forEach((src) => { new Image().src = src; });
+    };
+    colors.addEventListener('pointerdown', preload, { once: true });
+    colors.addEventListener('focus', preload, { once: true });
     const render = () => {
-      const c = +colors.value; // 남은 색 채널 수 (7 → 3)
-      const sat = 0.12 + ((c - 3) / 4) * 0.88;
-      const f = [`saturate(${sat.toFixed(2)})`];
-      if (c <= 3) f.push('brightness(.92)');
-      if (state.black && state.white) f.push('contrast(.45)', 'brightness(1.05)');
-      else if (state.black) f.push('contrast(.7)', 'brightness(1.2)');
-      else if (state.white) f.push('contrast(.8)', 'brightness(.75)');
-      img.style.filter = f.join(' ');
-      stage.classList.toggle('shake', state.black && state.white);
-      vignette.style.boxShadow = c <= 3 ? 'inset 0 0 120px 40px rgba(0,0,0,.85)' : 'none'; // 색 3개 이하 → 비네팅
-      fog.classList.toggle('on', state.smell);
+      const c = +colors.value;
+      const src = shots[c];
+      if (!img.src.endsWith(src)) img.src = src;
+      img.alt = c === 7
+        ? '실제 게임 화면. 색 채널 7개를 모두 가진 상태의 상점 카운터와 손님'
+        : `실제 게임 화면. ${sold.slice(0, 7 - c).join('·')}을 판 뒤 남은 색 ${c}개로 보이는 상점 카운터와 손님`;
       colorsOut.value = `${c}/7`;
     };
     colors.addEventListener('input', render);
-    $$('.toggle', demo).forEach((t) =>
-      t.addEventListener('click', () => {
-        const k = t.dataset.k;
-        state[k] = !state[k];
-        t.setAttribute('aria-pressed', String(state[k]));
-        render();
-      }),
-    );
     render();
   }
 

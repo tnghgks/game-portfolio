@@ -47,5 +47,3 @@ python -m http.server  # Python 이 있으면
 - [ ] 마왕 채널 역할 — `maou-channel.html` 메타 그리드
 - [ ] 23 공동 기획 파트의 역할 표기 — `twenty-three.html` 메타 그리드
 - [ ] 두 프로젝트 회고 — 각 페이지 마지막 섹션
-- [ ] 23 웹 빌드 배포 후 — `twenty-three.html` 히어로의 `웹 빌드 준비 중` 버튼에 `href` 넣고 `aria-disabled` 제거
-      (마왕 채널처럼 `.embed[data-src]` 블록을 추가하면 페이지 안에서 바로 플레이 가능)

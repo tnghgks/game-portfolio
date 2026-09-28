@@ -261,6 +261,14 @@ body[data-accent='twentythree'] { --hero-focus: 70% center; }
 .callout .label { font-family: var(--mono); font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 6px; }
 .callout.quote p { font-size: 19px; color: var(--text); font-weight: 650; line-height: 1.6; }
 
+.credit { margin: -8px 0 22px; font-size: 14px; color: var(--muted); }
+h3 + .credit { margin-top: 0; }
+.credit span {
+  display: inline-block; font-family: var(--mono); font-size: 11.5px; font-weight: 600; letter-spacing: .06em;
+  padding: 3px 9px; margin-right: 8px; border: 1px solid var(--line); border-radius: 999px; color: var(--text-2);
+}
+.credit span.solo { border-color: var(--accent); color: var(--accent); }
+
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 24px 0; }
 .card {
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px;
@@ -442,23 +450,11 @@ td b { color: var(--text); }
 /* interactive demos */
 .demo { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin: 28px 0; }
 .demo .stage { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #000; }
-.demo .stage img { width: 100%; height: 100%; object-fit: cover; transition: filter .35s ease, transform .35s ease; }
-.demo .fog { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .35s ease;
-  background: radial-gradient(ellipse at 30% 60%, rgba(200, 200, 210, .5), transparent 60%), radial-gradient(ellipse at 75% 40%, rgba(190, 190, 200, .45), transparent 55%); }
-.demo .fog.on { opacity: 1; animation: drift 9s ease-in-out infinite alternate; }
-@keyframes drift { from { transform: translateX(-3%); } to { transform: translateX(3%); } }
-.demo .shake img { animation: shake .18s steps(2) infinite; }
-@keyframes shake { 0% { transform: translate(0, 0) scale(1.01); } 50% { transform: translate(1.5px, -1px) scale(1.01); } 100% { transform: translate(-1px, 1px) scale(1.01); } }
+.demo .stage img { width: 100%; height: 100%; object-fit: cover; }
 .demo .controls { padding: 18px 20px 20px; display: grid; gap: 14px; }
 .demo .row { display: grid; grid-template-columns: 150px 1fr 60px; gap: 14px; align-items: center; font-size: 15px; }
 .demo .row label { font-weight: 650; color: var(--text); }
 .demo .row output { font-family: var(--mono); font-size: 13px; color: var(--accent); text-align: right; }
-.demo .toggles { display: flex; flex-wrap: wrap; gap: 8px; }
-.demo .toggle {
-  font: inherit; font-size: 14px; font-weight: 650; padding: 7px 14px; border-radius: 999px; cursor: pointer;
-  border: 1px solid var(--line-strong); background: var(--bg-2); color: var(--text-2);
-}
-.demo .toggle[aria-pressed='true'] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .demo .hint { font-size: 13.5px; color: var(--muted); margin: 0; }
 .demo input[type='range'] { width: 100%; accent-color: var(--accent); }
 @media (max-width: 560px) { .demo .row { grid-template-columns: 1fr 52px; } .demo .row label { grid-column: 1 / -1; } }
