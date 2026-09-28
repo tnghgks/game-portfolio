@@ -53,7 +53,7 @@
     });
   });
 
-  // ---- Chart: 도네이션 간격 곡선 (마왕 채널)
+  // ---- Chart: 후원 간격 곡선 (마왕 채널)
   const dChart = $('#donation-chart');
   if (dChart) {
     const W = 640, H = 260, L = 44, R = 16, T = 30, B = 36;
@@ -71,8 +71,8 @@
       const x = xs(Math.log10(v)), y = ys(interval(v));
       return `<circle cx="${x}" cy="${y}" r="4.5" fill="var(--accent)"/><text class="val" x="${x + 8}" y="${y - 9}">${l} · ${interval(v).toFixed(0)}초</text>`;
     }).join('');
-    dChart.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="시청자 수에 따른 도네이션 간격: 100명 이하 25초, 1,000명 22초, 10,000명 16초, 100,000명 이상 12초">
-      <text class="title" x="${L}" y="16">시청자 수 → 도네이션 간격</text>
+    dChart.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="시청자 수에 따른 후원 간격: 100명 이하 25초, 1,000명 22초, 10,000명 16초, 100,000명 이상 12초">
+      <text class="title" x="${L}" y="16">시청자 수 → 후원 간격</text>
       ${ticksY}${ticksX}
       <line class="axis" x1="${L}" x2="${W - R}" y1="${H - B}" y2="${H - B}"/>
       <path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>
