@@ -154,7 +154,7 @@ li::marker { color: var(--accent); }
   pointer-events: none;
 }
 .home-hero h1 { font-size: clamp(36px, 6.4vw, 72px); font-weight: 850; letter-spacing: -0.04em; line-height: 1.12; max-width: 14em; }
-.home-hero h1 em { font-style: normal; color: var(--accent); }
+.home-hero h1 em { font-style: normal; color: var(--accent); white-space: nowrap; } /* 강조 구절은 한 줄로 */
 .home-hero .lead { max-width: 36em; margin-top: 24px; }
 .home-hero > .wrap { position: relative; z-index: 1; }
 
