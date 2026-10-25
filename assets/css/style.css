@@ -442,6 +442,7 @@ td b { color: var(--text); }
 /* game embed */
 .embed { position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); background: #000; margin: 24px 0 10px; }
 .embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.embed[data-base] iframe { inset: 0 auto auto 0; transform: scale(var(--embed-scale, 1)); transform-origin: 0 0; }
 .embed .facade {
   all: unset; position: absolute; inset: 0; cursor: pointer; display: grid; place-items: center;
   background: center / cover no-repeat; isolation: isolate;

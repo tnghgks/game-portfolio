@@ -49,6 +49,15 @@
       f.allow = 'autoplay; fullscreen; gamepad';
       f.allowFullscreen = true;
       box.replaceChildren(f);
+      // data-base가 있으면 고정 해상도로 띄우고 박스 폭에 맞춰 통째로 축소 (작은 화면에서도 UI 비율 유지)
+      const base = Number(box.dataset.base);
+      if (base) {
+        f.style.width = `${base}px`;
+        f.style.height = `${base * 9 / 16}px`;
+        const fit = () => box.style.setProperty('--embed-scale', box.clientWidth / base);
+        fit();
+        new ResizeObserver(fit).observe(box);
+      }
       f.focus();
     });
   });
