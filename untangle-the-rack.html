@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Untangle the Rack — 케이스 스터디</title>
+  <meta name="description" content="서버를 사서 랙에 끼우고 선을 직접 꽂는 웹 3D 방치형 게임. AI 에이전트에게 구현을 맡기고, 방향과 채택·기각은 직접 결정한 과정을 ADR로 정리" />
+  <meta property="og:title" content="Untangle the Rack — 게임 기획 케이스 스터디" />
+  <meta property="og:image" content="assets/img/rack/rear-messy.png" />
+  <meta name="theme-color" content="#0d0d11" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23e8b04b'/%3E%3Ctext x='16' y='22' font-size='16' font-family='monospace' font-weight='700' text-anchor='middle' fill='%231a1408'%3EGD%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&display=swap" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body data-accent="rack">
+  <a class="skip" href="#main">본문으로 건너뛰기</a>
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="./">Hosu Han<span>.</span></a>
+      <nav class="site-nav" aria-label="주요 메뉴">
+        <a href="./#work">프로젝트</a>
+        <a href="./#about" class="hide-sm">소개</a>
+        <a href="maou-channel.html">마왕 채널</a>
+        <a href="twenty-three.html">23</a>
+        <a href="untangle-the-rack.html" aria-current="page">Rack</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="cs-hero">
+      <div class="bg"><img src="assets/img/rack/hero.png" alt="" /></div>
+      <div class="wrap" style="width:100%">
+        <p class="subtitle">개인 프로젝트 · UNTANGLE THE RACK</p>
+        <h1>Untangle the Rack</h1>
+        <p class="lead"><strong>빈 랙 하나에서 시작해 서버를 사서, 끼우고, 선을 꽂아 서버실을 키우는 웹 3D 방치형 게임.</strong>
+          구매 버튼으로 끝나지 않는 증설. 전원선과 랜선을 손으로 꽂고, 늘어진 선은 손으로 정리해야 수익이 회복.</p>
+        <div class="btn-row">
+          <a class="btn primary" href="https://tnghgks.github.io/untangle_the_rack/" target="_blank" rel="noopener">▶ 새 창에서 플레이</a>
+          <a class="btn" href="https://github.com/tnghgks/untangle_the_rack" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <dl class="meta-grid">
+        <div><dt>내 담당</dt><dd>기획 · 모든 채택/기각 결정<br />실플레이 · 피드백</dd></div>
+        <div><dt>기간 / 인원</dt><dd>약 2일 · 1인<br />구현은 AI 에이전트(Claude Code)</dd></div>
+        <div><dt>장르</dt><dd>방치형 × 손 배선</dd></div>
+        <div><dt>플랫폼</dt><dd>Web (three.js · TS · Vite)</dd></div>
+        <div><dt>진행</dt><dd>MVP + 정리·발열 단계</dd></div>
+      </dl>
+    </div>
+
+    <div class="cs-layout">
+      <nav class="toc" aria-label="목차">
+        <ol>
+          <li><a href="#overview">개요</a></li>
+          <li><a href="#decisions">설계 결정 (ADR)</a></li>
+          <li><a href="#feedback">플레이테스트 로그</a></li>
+          <li><a href="#ai">AI와 일하는 방식</a></li>
+          <li><a href="#play">플레이</a></li>
+          <li><a href="#status">개발 현황</a></li>
+        </ol>
+      </nav>
+
+      <div class="cs-content">
+        <!-- 1 -->
+        <section class="section" id="overview">
+          <p class="eyebrow">01 · Overview</p>
+          <h2>엉키면 손해, 정리하면 이득</h2>
+          <p><strong>케이블 정리 퍼즐을 방치형 경제에 붙인 게임.</strong>
+            장비가 늘수록 랙 뒤로 선이 늘어지고, 늘어진 선은 배기를 막아 수익을 최대 50%까지 깎는 구조. 정리 자체가 레벨 클리어 조건이 아니라 돈이 되는 행동.</p>
+          <div class="cards">
+            <div class="card"><span class="num">PILLAR 1</span><h4>켜 두면 돈이 쌓인다</h4><p>장비가 초 단위로 수익. 숫자가 오르는 걸 보는 방치형의 기본 재미.</p></div>
+            <div class="card"><span class="num">PILLAR 2</span><h4>증설은 손으로 한다</h4><p>랙 빈 칸에 끼우고, 전원선은 PDU에, 랜선은 스위치에 직접 꽂고 전원을 켜야 가동.</p></div>
+            <div class="card"><span class="num">PILLAR 3</span><h4>엉키면 손해, 정리하면 이득</h4><p>늘어진 선이 공기 흐름을 막아 수익 감소. 벨크로 · 케이블 매니저로 정리하면 회복.</p></div>
+          </div>
+          <div class="loop">
+            <svg viewBox="0 0 760 270" role="img" aria-label="코어 루프: 켜 둠(초당 수익)에서 구매, 설치, 배선·전원을 거쳐 수익이 늘고 다시 다음 장비를 산다. 배선이 늘면 남는 선이 배기를 막아 수익이 최대 50% 줄고, 정리하면 공기 흐름과 수익이 회복된다">
+              <defs>
+                <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrow" d="M0,0 L10,5 L0,10 z" /></marker>
+                <marker id="ahh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrow hl" d="M0,0 L10,5 L0,10 z" /></marker>
+              </defs>
+              <path class="edge hl" d="M665,60 C665,8 95,8 95,56" marker-end="url(#ahh)" />
+              <text class="lbl" x="380" y="46" text-anchor="middle">수익 증가 → 다음 장비</text>
+
+              <g class="node hl"><rect x="20" y="60" width="150" height="70" rx="12" /><text class="t" x="95" y="92" text-anchor="middle">켜 둠</text><text class="s" x="95" y="114" text-anchor="middle">초당 수익 · 오프라인 없음</text></g>
+              <g class="node"><rect x="210" y="60" width="150" height="70" rx="12" /><text class="t" x="285" y="92" text-anchor="middle">구매</text><text class="s" x="285" y="114" text-anchor="middle">장비 · 케이블 · 부품</text></g>
+              <g class="node"><rect x="400" y="60" width="150" height="70" rx="12" /><text class="t" x="475" y="92" text-anchor="middle">설치</text><text class="s" x="475" y="114" text-anchor="middle">랙 빈 칸에 끼우기</text></g>
+              <g class="node"><rect x="590" y="60" width="150" height="70" rx="12" /><text class="t" x="665" y="92" text-anchor="middle">배선 · 전원</text><text class="s" x="665" y="114" text-anchor="middle">PDU · 스위치에 꽂기</text></g>
+              <path class="edge" d="M170,95 L206,95" marker-end="url(#ah)" />
+              <path class="edge" d="M360,95 L396,95" marker-end="url(#ah)" />
+              <path class="edge" d="M550,95 L586,95" marker-end="url(#ah)" />
+
+              <path class="edge" d="M665,130 L665,176" marker-end="url(#ah)" style="stroke:var(--bad)" />
+              <g class="node"><rect x="590" y="180" width="150" height="70" rx="12" style="stroke:var(--bad)" /><text class="t" x="665" y="212" text-anchor="middle">남는 선</text><text class="s" x="665" y="234" text-anchor="middle">배기 막힘 · 최대 −50%</text></g>
+              <path class="edge" d="M590,215 L554,215" marker-end="url(#ah)" />
+              <g class="node hl"><rect x="400" y="180" width="150" height="70" rx="12" /><text class="t" x="475" y="212" text-anchor="middle">정리</text><text class="s" x="475" y="234" text-anchor="middle">벨크로 · 케이블 매니저</text></g>
+              <path class="edge hl" d="M400,215 L95,215 L95,134" marker-end="url(#ahh)" />
+              <text class="lbl" x="250" y="205" text-anchor="middle">공기 흐름 회복</text>
+            </svg>
+          </div>
+
+          <h3>기여 범위</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>영역</th><th>담당</th></tr></thead>
+              <tbody>
+                <tr><td><b>기획 방향 · 채택/기각 결정</b> (피벗 · 경제 · 정리 규칙 · 조작)</td><td class="yes">본인</td></tr>
+                <tr><td><b>실플레이 · 피드백</b></td><td class="yes">본인</td></tr>
+                <tr><td><b>선택지 · 추천안 제시, 구현, 테스트, 헤드리스 측정</b></td><td>AI 에이전트 (Claude Code)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>테마는 서버 호스팅 · AI 연산 임대. GPU 서버는 “AI 학습 임대”로 수익. 채굴은 일부 플랫폼이 꺼리는 소재라 제외(추천 채택).</p>
+        </section>
+
+        <!-- 2 -->
+        <section class="section" id="decisions">
+          <p class="eyebrow">02 · Decision Records</p>
+          <h2>설계 결정 기록</h2>
+          <p><strong>에이전트가 선택지와 추천안을 내고, 고르는 건 직접.</strong>
+            그래서 결정마다 누가 정했는지를 함께 기록. 판단 기준은 하나. 이 결정이 “손으로 하는 맛”과 “정리하면 이득”을 키우는가.</p>
+          <p class="status-legend"><span class="mine">내 결정 · 요청</span><span class="fb">플레이 피드백</span><span>추천안 채택</span></p>
+          <ol class="adr-index">
+            <li><a href="#adr-01"><b>ADR-01</b>케이블 정리 퍼즐을 방치형 서버실로 피벗</a></li>
+            <li><a href="#adr-02"><b>ADR-02</b>케이블은 완전 3D 물리로, 가장 먼저 검증</a></li>
+            <li><a href="#adr-03"><b>ADR-03</b>켜 둔 동안만 번다, 대신 백그라운드 탭도 켜 둔 것</a></li>
+            <li><a href="#adr-04"><b>ADR-04</b>해금은 없애고, 돈 상승은 보수적으로</a></li>
+            <li><a href="#adr-05"><b>ADR-05</b>시작 돈 300원, 서버 한 대는 이미 가동</a></li>
+            <li><a href="#adr-06"><b>ADR-06</b>정리 점수는 “배기 통로를 막은 케이블 길이”</a></li>
+            <li><a href="#adr-07"><b>ADR-07</b>케이블은 2m 고정, 남는 선이 곧 정리 대상</a></li>
+            <li><a href="#adr-08"><b>ADR-08</b>벨크로는 자동에서 손으로</a></li>
+            <li><a href="#adr-09"><b>ADR-09</b>케이블 매니저: 높이가 효과를 가른다</a></li>
+            <li><a href="#adr-10"><b>ADR-10</b>왼손은 케이블 전용, 결과는 뒷면에서 바로</a></li>
+            <li><a href="#adr-11"><b>ADR-11</b>만들지 않기로 한 것들</a></li>
+          </ol>
+
+          <article class="adr" id="adr-01">
+            <header><span class="id">ADR-01</span><h3>케이블 정리 퍼즐을 방치형 서버실로 피벗</h3><span class="status mine">내 결정 · 10.24</span></header>
+            <dl>
+              <!-- TODO: 피벗을 결심한 실제 이유를 한 줄 보강 -->
+              <dt>맥락</dt><dd>이전 버전은 레벨 10개짜리 케이블 정리 퍼즐. 정리는 레벨을 깨는 조건으로만 존재.</dd>
+              <dt>결정</dt><dd class="decision">방치형 서버실로 피벗. 단, 설치와 배선은 버튼이 아니라 손으로.</dd>
+              <dt>버린 대안</dt><dd>퍼즐 레벨 추가. 레벨 · 별점 · 2D 교차 판정 정리도는 모두 폐기.</dd>
+              <dt>결과</dt><dd>정리 재미가 경제에 연결됨. 장비를 늘릴수록 선이 엉키고, 엉킨 랙은 수익이 줄어드는 구조라 정리가 매번 다시 필요한 행동이 됨. 이 연결이 세 번째 디자인 기둥.</dd>
+            </dl>
+          </article>
+
+          <article class="adr" id="adr-02">
+            <header><span class="id">ADR-02</span><h3>케이블은 완전 3D 물리로, 가장 먼저 검증</h3><span class="status mine">내 결정 · 10.24</span></header>
+            <dl>
+              <dt>맥락</dt><dd>장비 앞면은 전원 버튼, 포트는 뒷면. 랙 뒤로 돌아가 배선하는 경험에는 랙 정면 평면만 쓰던 기존 2.5D 물리로는 부족.</dd>
+              <dt>결정</dt><dd class="decision">완전 3D 케이블 물리. 가장 큰 리스크라 첫 마일스톤에서 프로토타입부터.
+                실패하면 “케이블 작업만 평면, 화면은 3D”로 돌아가는 대안까지 미리 정해 둠.</dd>
+              <dt>버린 대안</dt><dd>평면 배선 + 3D 화면. 범용 물리 엔진(케이블 전용 조건이 많아 자체 Verlet가 단순하다는 에이전트 판단).</dd>
+              <dt>결과</dt><dd>첫날 프로토타입 통과. 대안 경로는 쓰지 않음. 카메라를 랙 뒤로 돌려 작업하는 것 자체가 게임의 정체성이 됨.</dd>
+            </dl>
+          </article>
+
+          <article class="adr" id="adr-03">
+            <header><span class="id">ADR-03</span><h3>켜 둔 동안만 번다, 대신 백그라운드 탭도 켜 둔 것</h3><span class="status mine">내 결정 · 10.24</span></header>
+            <dl>
+              <dt>맥락</dt><dd>방치형의 기본 질문. 창을 닫은 동안에도 벌게 할지, 다른 탭을 보는 동안은 어떻게 칠지.</dd>
+              <dt>결정</dt><dd class="decision">오프라인 수익 없음. 대신 페이지가 열려 있으면 탭이 숨겨져 있어도 실제 시간 기준으로 수익.</dd>
+              <dt>이유</dt><dd>“켜 두면 쌓인다”는 감각은 유지하면서, 다른 일을 하며 켜 두는 웹 방치형의 장점은 살림. 브라우저가 숨긴 탭의 프레임을 멈추므로 수익은 프레임 수가 아니라 시각 차이로 계산.</dd>
+              <dt>결과</dt><dd>배선 · 정리처럼 손이 가는 일은 켜 둔 동안에만 의미가 생겨, 방치와 손 작업이 한 세션 안에서 번갈아 나오는 리듬.</dd>
+            </dl>
+          </article>
+
+          <article class="adr" id="adr-04">
+            <header><span class="id">ADR-04</span><h3>해금은 없애고, 돈 상승은 보수적으로</h3><span class="status mine">내 요청 · 10.25</span></header>
+            <dl>
+              <dt>맥락</dt><dd>초안은 “웹 서버 3대 → 스토리지 해금”식 단계 해금과 가격 ×1.15 성장. MVP는 핵심 루프만이라는 방향.</dd>
+              <dt>결정</dt><dd class="decision">처음부터 전부 구매 가능. 상점이 막히는 이유는 돈과 자리 부족뿐.
+                대신 인플레이션을 막으려 가격 성장 ×1.25, 상위 서버일수록 본전 회수 시간을 길게.</dd>
+              <dt>버린 대안</dt><dd>GDD 해금 조건 유지.</dd>
+              <dt>결과</dt><dd>“다음에 뭘 살지”가 해금 순서가 아니라 회수 시간 비교의 문제로 전환. 이후 가격 수치는 요청 없이 건드리지 않도록 에이전트 규칙으로 고정.</dd>
+            </dl>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>장비</th><th>가격</th><th>수익/초</th><th>본전 회수</th></tr></thead>
+                <tbody>
+                  <tr><td><b>엔트리 서버</b> 1U</td><td>60원</td><td>1</td><td>60초</td></tr>
+                  <tr><td><b>웹 서버</b> 1U</td><td>400원</td><td>3</td><td>133초</td></tr>
+                  <tr><td><b>스토리지 서버</b> 2U</td><td>2,500원</td><td>10</td><td>250초</td></tr>
+                  <tr><td><b>GPU 서버</b> 4U</td><td>2.00만원</td><td>55</td><td>364초</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="adr" id="adr-05">
+            <header><span class="id">ADR-05</span><h3>시작 돈 300원, 서버 한 대는 이미 가동</h3><span class="status fb">플레이 피드백 · 10.25</span></header>
+            <dl>
+              <dt>맥락</dt><dd>시작 상태는 스위치 1대 + 엔트리 서버 1대가 이미 돌고 있는 랙(내 제안). 첫 실플레이에서 “0원부터 시작하니까 초반에 할 게 없다”.</dd>
+              <dt>결정</dt><dd class="decision">기본금 100~400원 선을 요청, 에이전트가 그 안에서 300원을 제안해 채택.
+                엔트리 서버(60원)와 케이블 세트(25원)는 여러 번 살 수 있고, 웹 서버(400원)는 조금 모아야 하는 값.</dd>
+              <dt>결과</dt><dd>켜자마자 사서 끼우고 꽂아 보는 첫 설치가 가능. 동시에 다음 목표(웹 서버)가 바로 보이는 출발점.</dd>
+            </dl>
+          </article>
+
+          <article class="adr" id="adr-06">
+            <header><span class="id">ADR-06</span><h3>정리 점수는 “배기 통로를 막은 케이블 길이”</h3><span class="status">추천 채택 + 내 결정 · 10.24–25</span></header>
+            <dl>
+              <dt>맥락</dt><dd>3D에서 “잘 정리했다”를 숫자로 만드는 기준이 필요. 이전 퍼즐의 교차 판정은 3D에서 직관적이지 않음.</dd>
+              <dt>결정</dt><dd class="decision">기준은 공기 흐름(추천 채택). 랙 뒷면 10cm 뒤부터 60cm까지를 배기 통로로 보고, 그 안을 지나는 꽂힌 케이블 길이로 점수.
+                시작 상태 감점은 “정리 후 회복이 잘 보이게” 4m 기준 유지(내 결정).</dd>
+              <dt>버린 대안</dt><dd>장비 배기구 바로 앞 상자로 재기. 측정해 보니 선을 뒷면에 붙여 정리할수록 오히려 감점. 단계형 배율, 랙 온도 °C 표시(연속 %를 선택).</dd>
+              <dt>결과</dt><dd>시작 랙 공기 흐름 23%, 수익 −39%. 막힌 토막은 주황빛으로 깜빡여 어디를 정리할지 바로 보임. 사 놓고 아직 안 꽂은 선은 세지 않아 사자마자 감점되는 일 없음.</dd>
+            </dl>
+            <div class="formula">공기 흐름 = 1 − <span class="a">L</span> / 4m <span class="c">  // L = 배기 통로를 지나는 꽂힌 케이블 길이</span><br />수익 배율 = 1 − 0.5 × (1 − 공기 흐름) <span class="c">  // 최악 −50%</span></div>
+            <div class="before-after">
+              <figure class="figure">
+                <img src="assets/img/rack/messy-crop.png" alt="게임 화면. 랙 뒤로 전원선·랜선 세 가닥이 바닥까지 늘어져 주황빛으로 깜빡이고, 상단 바에 공기 흐름 23% · 수익 −39%" width="1000" height="900" loading="lazy" />
+                <figcaption>정리 전. 공기 흐름 23% · 수익 −39%.</figcaption>
+              </figure>
+              <figure class="figure">
+                <img src="assets/img/rack/tidy-crop.png" alt="게임 화면. 같은 랙의 세 가닥이 옆면 세로 케이블 매니저 고리를 따라 올라갔다 내려와 정리되고, 상단 바에 공기 흐름 93% · 수익 −4%" width="1000" height="900" loading="lazy" />
+                <figcaption>세로 케이블 매니저로 정리 후. 93% · −4%.</figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <article class="adr" id="adr-07">
+            <header><span class="id">ADR-07</span><h3>케이블은 2m 고정, 남는 선이 곧 정리 대상</h3><span class="status mine">내 결정 · 변경 2회</span></header>
+            <dl>
+              <dt>맥락</dt><dd>추천안은 “길이를 골라 구매”. 그러면 처음부터 딱 맞는 선을 사서 정리할 거리가 사라짐.</dd>
+              <dt>결정</dt><dd class="decision">1차: 기본 2m + 꽂은 뒤 줄이는 도구(추천 대신 내 결정). 2차: 줄이기 도구도 제거, 2m 고정. 남는 길이는 벨크로 · 매니저로만 정리.
+                케이블은 장비와 따로 상점에서 구매(랜선 10원, 전원선 15원).</dd>
+              <dt>버린 대안</dt><dd>길이 골라 구매. 남는 선 말아 두기(제안 단계에서 “줄이기와 효과가 같다”며 기각).</dd>
+              <dt>결과</dt><dd>정리 수단이 벨크로 · 매니저로 좁혀져, 남는 길이를 “어디에 어떻게 걸어 둘까”가 정리의 핵심이 됨.</dd>
+            </dl>
+          </article>
+
+          <article class="adr" id="adr-08">
+            <header><span class="id">ADR-08</span><h3>벨크로는 자동에서 손으로</h3><span class="status fb">플레이 피드백 · 10.25</span></header>
+            <dl>
+              <dt>맥락</dt><dd>첫 벨크로는 클릭 한 번에 케이블을 기둥의 닿는 가장 높은 곳으로 자동으로 끌어올려 묶는 방식. 효과는 확실했지만 피드백은
+                “너무 자동이라 직접 하는 맛이 없다. 선 정리하는 맛이 있어야 함”.</dd>
+              <dt>결정</dt><dd class="decision">한 손으로 대고 다른 손으로 감기. 케이블 가운데를 끌어 뒷면 기둥에 대면 감길 자리가 미리 보이고, 든 채로 Space(또는 오른쪽 클릭)를 눌러 띠 감기.
+                한 띠에 여러 가닥을 묶어 다발 가능. 무료 · 무제한.</dd>
+              <dt>버린 대안</dt><dd>기둥 몇 U마다 고정 고리, 끌어서 놓으면 자동으로 묶기, 케이블끼리 묶기(통로 안 길이가 그대로라 점수 효과 없음).</dd>
+              <dt>결과</dt><dd>세로 기둥이라 그냥 놓으면 미끄러져 내려 “걸쳐 놓고 나중에 클릭”은 불가. 정리가 매번 손으로 대고 감는 동작이 됨. 이후 매니저 고리도 같은 손을 그대로 사용.</dd>
+            </dl>
+          </article>
+
+          <article class="adr" id="adr-09">
+            <header><span class="id">ADR-09</span><h3>케이블 매니저: 높이가 효과를 가른다</h3><span class="status">추천 채택 + 내 결정 · 10.26</span></header>
+            <dl>
+              <dt>맥락</dt><dd>벨크로는 랙 양 끝 기둥에만 고정점을 만듦. 랙 가운데에 원하는 높이로 선을 걸 자리가 필요.</dd>
+              <dt>결정</dt><dd class="decision">1U 가로 케이블 매니저를 상점에서 사서 랙 칸에 끼우고, 뒷면 고리 5개에 벨크로와 같은 손으로 걸기(설계 질문 3개 모두 추천안 선택).
+                가격은 100원, ×1.25 성장으로 내가 확정. 남는 선을 둘 자리는 레퍼런스 사진(옆 덕트를 따라 오르내리는 다발)을 내가 제시해 세로 매니저로 추가.</dd>
+              <dt>버린 대안</dt><dd>처음부터 무료로 지급, 놓으면 자동으로 걸림. 둘 다 “직접 하는 맛”(ADR-08)과 충돌.</dd>
+              <dt>결과</dt><dd>같은 세 가닥을 걸어도 매니저 높이에 따라 회복 폭이 크게 달라짐. 남는 길이가 고리 아래로 늘어져야 바닥에 안 깔리기 때문.
+                “어디에 달까”가 새 결정거리가 됨. 세로 매니저는 위로 올렸다가 아래 고리로 다시 내려 걸면 거의 100%까지 회복.</dd>
+            </dl>
+            <div class="chart">
+              <svg viewBox="0 0 640 250" role="img" aria-label="가로 케이블 매니저 설치 높이별 공기 흐름(시작 랙, 세 가닥을 하나씩 건 뒤): 정리 전 23%, U2 24%, U5 41%, U10 70%, U15 95%, U20 100%">
+                <text class="title" x="44" y="16">매니저 높이 → 공기 흐름 (시작 랙, 세 가닥 걸기 · 헤드리스 측정)</text>
+                <line class="grid" x1="44" x2="624" y1="44" y2="44" /><text x="36" y="48" text-anchor="end">100%</text>
+                <line class="grid" x1="44" x2="624" y1="124" y2="124" /><text x="36" y="128" text-anchor="end">50%</text>
+                <line class="axis" x1="44" x2="624" y1="204" y2="204" /><text x="36" y="208" text-anchor="end">0</text>
+                <rect x="60" y="167" width="72" height="37" rx="4" fill="var(--accent-2)" />
+                <rect x="156" y="166" width="72" height="38" rx="4" fill="var(--accent)" opacity=".45" />
+                <rect x="252" y="138" width="72" height="66" rx="4" fill="var(--accent)" opacity=".6" />
+                <rect x="348" y="92" width="72" height="112" rx="4" fill="var(--accent)" opacity=".75" />
+                <rect x="444" y="52" width="72" height="152" rx="4" fill="var(--accent)" opacity=".9" />
+                <rect x="540" y="44" width="72" height="160" rx="4" fill="var(--accent)" />
+                <text class="val" x="96" y="159" text-anchor="middle">23%</text>
+                <text class="val" x="192" y="158" text-anchor="middle">24%</text>
+                <text class="val" x="288" y="130" text-anchor="middle">41%</text>
+                <text class="val" x="384" y="84" text-anchor="middle">70%</text>
+                <text class="val" x="480" y="44" text-anchor="middle">95%</text>
+                <text class="val" x="576" y="36" text-anchor="middle">100%</text>
+                <text x="96" y="226" text-anchor="middle" style="fill:var(--text);font-family:var(--font);font-size:13px;font-weight:700">정리 전</text>
+                <text x="192" y="226" text-anchor="middle" style="fill:var(--text);font-family:var(--font);font-size:13px;font-weight:700">U2</text>
+                <text x="288" y="226" text-anchor="middle" style="fill:var(--text);font-family:var(--font);font-size:13px;font-weight:700">U5</text>
+                <text x="384" y="226" text-anchor="middle" style="fill:var(--text);font-family:var(--font);font-size:13px;font-weight:700">U10</text>
+                <text x="480" y="226" text-anchor="middle" style="fill:var(--text);font-family:var(--font);font-size:13px;font-weight:700">U15</text>
+                <text x="576" y="226" text-anchor="middle" style="fill:var(--text);font-family:var(--font);font-size:13px;font-weight:700">U20</text>
+              </svg>
+            </div>
+          </article>
+
+          <article class="adr" id="adr-10">
+            <header><span class="id">ADR-10</span><h3>왼손은 케이블 전용, 결과는 뒷면에서 바로</h3><span class="status fb">플레이 피드백 · 10.25–26</span></header>
+            <dl>
+              <dt>맥락</dt><dd>첫 실플레이에서 나온 조작 피드백. 회전은 가운데 버튼으로 옮기고 클릭 회전은 빼 달라는 요청, 그리고 뒷면에서 선을 꽂은 뒤 돌아가는지 몰라 “멀뚱멀뚱” 있게 된다는 지적.</dd>
+              <dt>결정</dt><dd class="decision">카메라 회전은 가운데 버튼, 왼쪽은 잡기 · 클릭 전용. 상태등을 뒷면에도 달고 “꺼져 있지만 배선 완료(파랑)” 상태 추가.
+                꽂힌 커넥터는 직접 잡고 끌어야만 뽑힘. 산 케이블은 한쪽 끝을 든 채로 시작. 장비 몸체를 끌어 다른 칸으로 옮기기(닿는 케이블은 꽂힌 채).</dd>
+              <dt>버린 대안</dt><dd>왼쪽 드래그 회전 유지. 케이블 가운데를 당기면 반대쪽이 뽑히는 기존 방식.</dd>
+              <dt>결과</dt><dd>왼쪽 버튼은 손 작업만 담당. 뒷면에서 꽂는 즉시 상태등 색으로 결과를 보고, 파랑이면 앞면으로 돌아가 전원을 켜는 흐름.</dd>
+            </dl>
+          </article>
+
+          <article class="adr" id="adr-11">
+            <header><span class="id">ADR-11</span><h3>만들지 않기로 한 것들</h3><span class="status mine">내 결정 · 범위 축소</span></header>
+            <dl>
+              <dt>맥락</dt><dd>MVP는 핵심 루프 한 바퀴만. 정리 도구와 물리는 욕심을 내면 끝이 없는 영역.</dd>
+              <dt>결정</dt><dd class="decision">케이블끼리 충돌(“이 정도면 충분”), 빗 정리 도구, 줄이기 도구(ADR-07), 단계 해금(ADR-04), 오프라인 수익(ADR-03)은 만들지 않음.</dd>
+              <dt>결과</dt><dd>정리 도구는 벨크로 · 가로 매니저 · 세로 매니저 세 가지로 수렴. 모두 “끌어서 대고 Space”라는 같은 손이라 새 도구를 배울 부담 없음.</dd>
+            </dl>
+          </article>
+        </section>
+
+        <!-- 3 -->
+        <section class="section" id="feedback">
+          <p class="eyebrow">03 · Iteration</p>
+          <h2>플레이테스트 로그</h2>
+          <p><strong>직접 마우스로 플레이하고 나온 피드백을 원문 그대로 기록.</strong> 수치 튜닝은 실플레이 전까지 보류하고, 조작과 손맛부터.</p>
+          <ol class="timeline">
+            <li><span class="date">10.25 · 1차 실플레이</span><p class="what">시작 돈 300원, 가이드 토글, 가운데 버튼 회전, 올리면 강조, 뒷면 상태등</p>
+              <p class="fb">0원부터 시작하니까 초반에 할 게 없다 / 케이블 연결하고 멀뚱멀뚱 있을 수 있다</p>
+              <p>피드백 6개를 한 번에 반영. 선끼리 충돌은 “이 정도면 충분”으로 제외. → ADR-05, ADR-10</p></li>
+            <li><span class="date">10.25</span><p class="what">벨크로 자동 방식 폐기, 손 배선으로 교체</p>
+              <p class="fb">너무 자동이라서 직접 하는 맛이 없다</p>
+              <p>같은 날 줄이기 도구 제거, 꽂힌 포트는 직접 잡아야 뽑히게, 판매는 클릭 즉시 · 50% 환급. → ADR-07, ADR-08</p></li>
+            <li><span class="date">10.26</span><p class="what">고리 고르기를 화면 각도 기준으로</p>
+              <p class="fb">케이블 고리가 생각보다 끼우기 어렵다</p>
+              <p>3cm 고정 판정은 2.5m 거리에서 화면 13px 남짓. 시선 각도 0.03rad(약 26px)로 변경.</p></li>
+            <li><span class="date">10.26</span><p class="what">든 선만 걸기</p>
+              <p class="fb">같은 지점을 지나는 모든 선이 묶인다</p>
+              <p>들고 있는 선만 걸리고, 빈손 클릭일 때만 닿은 선 모두.</p></li>
+            <li><span class="date">10.26</span><p class="what">고리 사이를 팽팽하게</p>
+              <p class="fb">고리를 통과하는 선이 조금 더 일직선을 유지하면 좋겠다</p>
+              <p>고리 사이 처짐 2.7cm → 1.3cm. 포트 바로 위 고리에 엉뚱한 마디가 들어가던 문제(“가운데 고리에 계속 포트에 가까운 선이 들어간다”)도 함께 수정.</p></li>
+            <li><span class="date">10.26</span><p class="what">장비 끌어 옮기기, 세로 케이블 매니저</p>
+              <p class="fb">서버도 드래그로 위아래로 옮길 수 있으면 / 남은 선 정리는 어떻게 하는 게 좋지?</p>
+              <p>남는 선 문제는 레퍼런스 사진으로 방향을 정해 세로 매니저로. → ADR-09</p></li>
+          </ol>
+        </section>
+
+        <!-- 4 -->
+        <section class="section" id="ai">
+          <p class="eyebrow">04 · AI Workflow</p>
+          <h2>결정은 내가, 구현과 측정은 에이전트가</h2>
+          <p><strong>구현은 에이전트에 맡기고, 기획자로서 결정에 집중.</strong> 에이전트(Claude Code)는 설계 질문마다 선택지와 추천안을 내고, 고르는 건 직접. 추천을 뒤집은 결정(ADR-07)과 내가 먼저 꺼낸 방향(ADR-01 · 09)이 게임의 성격을 정함.</p>
+          <div class="stats">
+            <div class="stat"><div class="v">29<small>건</small></div><div class="k">GDD 결정 로그 (채택 · 이유 · 결정 주체)</div></div>
+            <div class="stat"><div class="v">11<small>개</small></div><div class="k">세션 인계 문서 (handoff)</div></div>
+            <div class="stat"><div class="v">21<small>커밋</small></div><div class="k">구현 약 13시간 (10.25 정오 → 10.26 새벽)</div></div>
+            <div class="stat"><div class="v">86<small>개</small></div><div class="k">헤드리스 테스트 (Vitest)</div></div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>장치</th><th>하는 일</th></tr></thead>
+              <tbody>
+                <tr><td><b>handoff 문서</b></td><td>세션마다 목표 · 채택/기각과 그 이유 · 결정 주체 · 근거 데이터 · 피드백 원문을 기록. 다음 세션이 앞선 결정을 잊거나 뒤집지 않게.</td></tr>
+                <tr><td><b>고정 규칙</b></td><td>“가격 수치는 요청 없이 건드리지 말 것”, “커밋 · 배포는 물어보고”. 에이전트가 알아서 튜닝하지 못하게 경계를 명시.</td></tr>
+                <tr><td><b>헤드리스 측정</b></td><td>“매니저를 어디 달면 몇 %?”를 감이 아니라 숫자로. 높이별 공기 흐름, 고리 사이 처짐 같은 수치가 결정 근거.</td></tr>
+                <tr><td><b>배포 자동화</b></td><td>main에 push하면 테스트 → 빌드 → GitHub Pages. 결정한 내용을 바로 플레이 가능한 주소에서 확인.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout">
+            <span class="label">가장 유용했던 장치</span>
+            <p>결정마다 “누가 정했는지”를 남긴 것. 추천안을 그대로 고른 결정과 내가 뒤집은 결정이 구분돼, 게임이 흔들릴 때 어느 결정으로 돌아가 다시 볼지 바로 보임.</p>
+          </div>
+        </section>
+
+        <!-- 5 -->
+        <section class="section" id="play">
+          <p class="eyebrow">05 · Play</p>
+          <h2>직접 플레이</h2>
+          <p><strong>랙 뒤로 돌아가 선 세 가닥을 정리하는 것만으로 루프 한 바퀴 체험 가능.</strong> 데스크톱 Chrome, 가운데 버튼이 있는 마우스 권장.</p>
+          <div class="embed" data-src="https://tnghgks.github.io/untangle_the_rack/" data-title="Untangle the Rack 플레이">
+            <button class="facade" style="background-image:url('assets/img/rack/hero.png')" aria-label="Untangle the Rack을 이 페이지에서 플레이"><span>▶ 여기서 플레이</span></button>
+          </div>
+          <p class="embed-note">진행은 브라우저에 자동 저장. 큰 화면은 <a href="https://tnghgks.github.io/untangle_the_rack/" target="_blank" rel="noopener">새 창에서 열기</a>.
+            조작: 가운데 드래그 회전 · 오른쪽 드래그 이동 · 휠 확대 · 커넥터를 끌어 포트에 놓기 · 케이블을 기둥이나 고리에 대고 <code>Space</code> · <code>1</code> 손 · <code>2</code> 벨크로 · <code>3</code> 판매</p>
+        </section>
+
+        <!-- 6 -->
+        <section class="section" id="status">
+          <p class="eyebrow">06 · Status</p>
+          <h2>아직 개발 중</h2>
+          <p><strong>현재 MVP와 정리 · 발열 단계까지 구현된 상태로, 개발이 계속 진행 중.</strong>
+            이 페이지의 수치와 조작은 지금 빌드 기준이며, 이후 업데이트에 따라 바뀔 수 있음.</p>
+          <a class="next-project" href="maou-channel.html">
+            <span><small>OTHER PROJECT</small><b>마왕 채널</b></span>
+            <span class="btn primary">보기 →</span>
+          </a>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap inner">
+      <span>© 2026 Hosu Han · Game Design Portfolio</span>
+      <span><a href="./">← 홈으로</a></span>
+    </div>
+  </footer>
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

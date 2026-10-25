@@ -1,6 +1,6 @@
 # game-portfolio
 
-게임 기획 포트폴리오 — NAN 2026 사전과제 **마왕 채널**, 본선 **23 (Twenty-Three)**.
+게임 기획 포트폴리오 — NAN 2026 사전과제 **마왕 채널**, 본선 **23 (Twenty-Three)**, 개인 프로젝트 **Untangle the Rack**.
 
 **▶ https://tnghgks.github.io/game-portfolio/**
 
@@ -12,10 +12,12 @@
 index.html              홈 — 소개 · 프로젝트 카드 · About
 maou-channel.html       마왕 채널 케이스 스터디 (게임 iframe 임베드)
 twenty-three.html       23 케이스 스터디 (감각 상실 데모 · 간파 확률 계산기 · 발표 PDF)
+untangle-the-rack.html  Untangle the Rack 케이스 스터디 (ADR · 정리 전후 캡처 · 게임 iframe 임베드)
 assets/css/style.css    공통 스타일 — 색은 전부 :root 토큰, 프로젝트별 강조색은 body[data-accent]
 assets/js/main.js       목차 하이라이트 · 라이트박스 · iframe 지연 로드 · 차트 · 인터랙티브 데모
 assets/img/maou/        마왕 채널 배경 · 스프라이트 (Project_MAOU/public/assets 에서 추출)
 assets/img/twenty-three/ 23 타이틀 · 인트로 컷 · 컨셉 아트 (JPEG로 리사이즈)
+assets/img/rack/        Untangle the Rack 랙 뒷면 정리 전·후 캡처 (헤드리스 Chrome)
 assets/docs/            발표자료 · AI 활용 문서 PDF
 .nojekyll               Jekyll 처리 끄기
 ```
@@ -46,4 +48,5 @@ python -m http.server  # Python 이 있으면
 - [ ] 자기소개 문단 — `index.html` #about
 - [ ] 마왕 채널 역할 — `maou-channel.html` 메타 그리드
 - [ ] 23 공동 기획 파트의 역할 표기 — `twenty-three.html` 메타 그리드
-- [ ] 두 프로젝트 회고 — 각 페이지 마지막 섹션
+- [ ] 두 프로젝트 회고 — 마왕 채널 · 23 페이지 마지막 섹션
+- [ ] Untangle the Rack 피벗 이유 — `untangle-the-rack.html` ADR-01

@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>게임 기획 포트폴리오</title>
-  <meta name="description" content="아이디어를 플레이할 수 있게 만드는 게임 기획자의 포트폴리오. 2주 만에 완성한 방송 게임 마왕 채널, 48시간 만에 완성한 상점 게임 23 수록" />
+  <meta name="description" content="아이디어를 플레이할 수 있게 만드는 게임 기획자의 포트폴리오. 2주 만에 완성한 방송 게임 마왕 채널, 48시간 만에 완성한 상점 게임 23, 웹 3D 서버실 방치형 Untangle the Rack 수록" />
   <meta property="og:title" content="게임 기획 포트폴리오" />
-  <meta property="og:description" content="마왕 채널 · 23(Twenty-Three) — NAN 2026 사전과제와 본선 결과물" />
+  <meta property="og:description" content="마왕 채널 · 23(Twenty-Three) · Untangle the Rack — NAN 2026 사전과제·본선 결과물과 개인 프로젝트" />
   <meta property="og:image" content="assets/img/twenty-three/title.jpg" />
   <meta name="theme-color" content="#0d0d11" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23e8b04b'/%3E%3Ctext x='16' y='22' font-size='16' font-family='monospace' font-weight='700' text-anchor='middle' fill='%231a1408'%3EGD%3C/text%3E%3C/svg%3E" />
@@ -27,6 +27,7 @@
         <a href="#about" class="hide-sm">소개</a>
         <a href="maou-channel.html">마왕 채널</a>
         <a href="twenty-three.html">23</a>
+        <a href="untangle-the-rack.html">Rack</a>
       </nav>
     </div>
   </header>
@@ -92,6 +93,18 @@
               <span class="more">케이스 스터디 →</span>
             </div>
           </a>
+
+          <a class="project-card" href="untangle-the-rack.html" style="--pc-accent:#5fd38a">
+            <div class="thumb"><img src="assets/img/rack/hero.png" alt="3D 서버 랙 뒷면. 바닥까지 늘어진 전원선·랜선이 배기를 막아 주황빛으로 깜빡이는 모습" loading="lazy" /></div>
+            <div class="body">
+              <span class="kicker">개인 프로젝트 · 2일 · 1인 + AI 에이전트</span>
+              <h3>Untangle the Rack</h3>
+              <p><strong>“엉키면 손해, 정리하면 이득.” 케이블 정리 퍼즐을 방치형 경제에 붙여 웹 3D 게임으로 피벗.</strong>
+                서버를 사서 랙에 끼우고 선을 손으로 꽂는 서버실 방치형. 구현은 AI 에이전트에 맡기고, 채택·기각 결정 29건을 직접 내리며 기록.</p>
+              <ul class="tags"><li>피벗·시스템 기획</li><li>의사결정 기록</li><li>Web · three.js</li><li>플레이 가능</li></ul>
+              <span class="more">케이스 스터디 →</span>
+            </div>
+          </a>
         </div>
       </div>
     </section>
@@ -108,16 +121,20 @@
               문서에 정의된 수치들을 코드로써 구현하고, 플레이테스트에서 나온 피드백을 바로 수치 조정으로 반영합니다.
             </p>
             <p>
-              두 게임 모두 AI 에이전트와 함께 제작하였으며, 반복 작업은 AI로 속도를 올리고, 재미와 가설을 판단하는 일은 직접 담당합니다.
+              세 게임 모두 AI 에이전트와 함께 제작하였으며, 반복 작업은 AI로 속도를 올리고, 재미와 가설을 판단하는 일은 직접 담당합니다.
             </p>
             <h4>NAN 2026</h4>
             <ul>
               <li><b>사전과제</b> — 마왕 채널 (2주)</li>
               <li><b>본선</b> — 23 (48시간)</li>
             </ul>
+            <h4>개인 프로젝트</h4>
+            <ul>
+              <li><b>Untangle the Rack</b> — 웹 3D 방치형 (2일)</li>
+            </ul>
           </div>
           <ul class="skill-list">
-            <li><b>빠른 프로토타이핑</b><span>아이디어를 플레이 가능한 빌드로 직접 구현. TypeScript, Phaser, Godot 활용.</span></li>
+            <li><b>빠른 프로토타이핑</b><span>아이디어를 플레이 가능한 빌드로 직접 구현. TypeScript, Phaser, Godot, three.js 활용.</span></li>
             <li><b>시스템 · 경제</b><span>공식을 세우고 플레이테스트로 수치 조정. 시청자 → 후원 공식, 감각 가격표·보이지 않는 평판 수치(공동 설계).</span></li>
             <li><b>주제 해석 · 세계관</b><span>세계관을 규칙의 근거로 설계. “2026년 × 감각 × 수집”에서 감각이 돈이 된 이유를 동료와 함께 정리해 게임 규칙으로 연결.</span></li>
             <li><b>AI로 제작 속도 확보</b><span>기획서, LLM Agents, 이미지·3D·음악 생성으로 소규모 팀의 제작 범위 확장.</span></li>
